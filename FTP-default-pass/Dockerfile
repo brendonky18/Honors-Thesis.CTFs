@@ -4,7 +4,7 @@ WORKDIR /srv
 
 COPY /pyftpd-0.8.4.5 /srv/ftp
 
-COPY FLAG /etc
+COPY FLAG /
 
 EXPOSE 2121
 
