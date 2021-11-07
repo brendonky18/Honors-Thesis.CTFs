@@ -263,7 +263,6 @@ class BasicSession:
             return
 
         self.dataport = (hi << 8) + lo
-        self.reply("IP is" + str(self.ip))
         self.reply("230 Port is " + str(self.dataport)+ " (am ignoring specified IP for security)")
 
     def stor_or_appe(self, filename, comm, mode):
