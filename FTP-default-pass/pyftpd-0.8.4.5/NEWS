@@ -1,0 +1,52 @@
+2 Dec 2001
+
+  version 0.8.1
+  * minor tweaks and bugfixes enabling pyftpd to run on Windows again
+  
+3 Oct 2000
+
+  version 0.8
+  * can run from inetd
+  * modules renamed to saner names
+  * separated filesystem from ftp as standalone module
+    as a result URL- and curl- virtual filesystems appeared
+  * moved logging to separate and configurable modules
+  * modules can overwrite Session class
+  * moved LIST into separate module, which made it configurable
+
+13 Aug 2000
+
+  version 0.7
+  * unified auth and perm modules
+  * auth_chroot module added (virtual root directories)
+
+13 Jul 2000
+
+    version 0.6:
+  * fixed NLST
+  * fixed STOR and APPE (thanks to Remco Gerlich for finding a bug)
+
+7 Jul 2000:
+
+    version 0.5:
+  * timeout_socket multiple socket close fixes
+  * documentation enhancement
+
+5 Jul 2000:
+
+    version 0.4:
+  * passive mode
+  * posix path emulation for windows
+  * numerous bugfixes
+  * limit upload/download speed
+  * tkinter configuration now finished
+
+
+27 Jun 2000:
+
+    version 0.3, first usable version
+
+old pyFTPdrop's history by Marco:
+revision history:
+       0.2.0   initial public release
+       0.2.1   more informative FTP replies

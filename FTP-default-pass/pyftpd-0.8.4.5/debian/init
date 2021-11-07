@@ -1,0 +1,72 @@
+#!/bin/sh
+#
+# Start the pyftpd daemon.
+
+
+run_pyftpd=1
+pyftpd_options=""
+
+PATH=/bin:/usr/bin:/sbin:/usr/sbin
+DAEMON=/usr/sbin/pyftpd
+NAME=pyftpd
+FLAGS="defaults 50"
+
+trap "" 1
+trap "" 15
+
+test -f $DAEMON || exit 0
+
+case "$1" in
+
+  start)
+    if [ $run_pyftpd = 1 ]
+    then
+        #update-inetd --disable ftp
+        echo -n "Starting pyftp daemon: "
+        if start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
+            --exec $DAEMON -- $pyftpd_options
+        then
+            echo "$NAME."
+        else
+            echo
+        fi
+    fi
+    ;;
+
+  stop)
+    if [ $run_pyftpd = 1 ]
+    then
+        echo -n "Stopping pyftp daemon: "
+        start-stop-daemon --stop --quiet --pidfile /var/run/$NAME.pid
+    fi
+    ;;
+
+  reload)
+    $0 restart
+    ;;
+
+  restart)
+    $0 force-reload
+    ;;
+
+  force-reload)
+    echo -n "Restarting $NAME daemon."
+    /etc/init.d/$NAME stop > /dev/null 2>&1
+    echo -n "."
+    sleep 1
+    echo -n "."
+    if start-stop-daemon --start --quiet --pidfile /var/run/$NAME.pid \
+        --exec $DAEMON -- $pyftpd_options
+    then
+        echo "done."
+    fi
+    ;;
+
+  *)
+    echo "Usage: /etc/init.d/$NAME {start|stop|reload|restart|force-reload}"
+    exit 1
+    ;;
+
+esac
+
+exit 0

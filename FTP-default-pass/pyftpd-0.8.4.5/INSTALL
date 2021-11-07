@@ -1,0 +1,20 @@
+You must have python (http://www.python.org) installed first. If you want to
+take advantage of the graphical configuration interface, you must have
+functioning Tkinter. Fortunately, many (all?) recent linux distributions
+come with python/tkinter.
+
+Simply unpack the distribution archive in a suitable directory, set up 
+configuration and run pyftpd.py.
+
+For unix servers: you might consider setting up a dedicate user for
+running pyftpd. If you want to bind pyftpd to a port below 1024, you
+probably need special privileges for it (which can be achieved by
+using sockfs, medusa, rsbac or something similar for linux; or running
+under root privileges - this is NOT recommended)
+
+For Windows servers: install python first. If you want graphical interface,
+answer Yes when the installer asks you to install tcl/tk. If you want to get
+rid of the MSDOS prompt window, rename pyftpd.py to pyftpd.pyw (in future,
+this will be default, but for now MSDOS window is useful for debug and error
+messages). If you want to start it automatically, add pyftpd.py to your
+Start Up group.

@@ -1,0 +1,115 @@
+pyftpd (0.8.4.5) unstable; urgency=low
+
+  * pre-depend on python-central (closes:#408277)
+
+ -- Radovan Garabík <garabik@kassiopeia.juls.savba.sk>  Sun, 30 Sep 2007 17:28:00 +0200
+
+pyftpd (0.8.4.4) unstable; urgency=low
+
+  * use python-central (closes: #380904)
+
+ -- Radovan Garabík <garabik@kassiopeia.juls.savba.sk>  Mon,  6 Nov 2006 16:54:21 +0100
+
+pyftpd (0.8.4.3) unstable; urgency=low
+
+  * now REALLY make it work with python2.3. Even if there is no
+    python2.2 installed <sigh>. (closes: #233195)
+
+ -- Radovan Garabík <garabik@kassiopeia.juls.savba.sk>  Tue, 20 Apr 2004 16:14:45 +0200
+
+pyftpd (0.8.4.2) unstable; urgency=low
+
+  * modified debian dependencies to work with python2.3 (closes: #207338)
+  * removed python-pam suggestion since it was buggy anyway
+
+ -- Radovan Garabík <garabik@kassiopeia.juls.savba.sk>  Wed, 10 Sep 2003 18:54:05 +0200
+
+pyftpd (0.8.4.1) unstable; urgency=low
+
+  * NMU
+  * Explicitely use python2.2 (closes: #206649).
+
+ -- Matthias Klose <doko@debian.org>  Tue, 26 Aug 2003 08:02:57 +0200
+
+pyftpd (0.8.4) unstable; urgency=low
+
+  * the previously mentioned typo is really fixed now :-)
+    thanks to Jarosław Bylina for pointing this out
+  * introduced UTF-8 characters into debian/changelog and debian/control (yeah :-))
+
+ -- Radovan Garabík <garabik@kassiopeia.juls.savba.sk>  Tue,  1 Jul 2003 13:41:53 +0200
+
+pyftpd (0.8.3) unstable; urgency=low
+
+  * fixed silly typo causing exception when deleting a directory 
+    (closes: #173886)
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Wed,  5 Feb 2003 09:54:24 +0100
+
+pyftpd (0.8.2) unstable; urgency=low
+
+  * upgraded to work with python2.2 (closes: #161558)
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Fri, 11 Oct 2002 10:00:00 +0200
+
+pyftpd (0.8.1) unstable; urgency=low
+
+  * python dependency according to new policy (closes: #119208)
+  * clean bytecompiled modules after purge (closes: #117804)
+  * minor tweaks
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Sun,  2 Dec 2001 16:16:28 +0100
+
+pyftpd (0.8) unstable; urgency=low
+
+  * can run from inetd
+  * modules renamed to saner names
+  * separated filesystem from ftp as standalone module
+    as a result URL- and curl- virtual filesystems appeared
+  * moved logging to separate and configurable modules
+  * modules can overwrite Session class
+  * moved LIST into separate module, which made it configurable
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Tue,  3 Oct 2000 17:43:22 +0400
+
+pyftpd (0.7) unstable; urgency=low
+
+  * unified auth and perm modules
+  * auth_chroot module added
+  * few more try... except clauses around critical places
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Sun, 13 Aug 2000 20:55:45 +0200
+
+pyftpd (0.6) unstable; urgency=low
+
+  * fixed NLST
+  * fixed STOR and APPE (thanks to Remco Gerlich for finding a bug)
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Mon, 10 Jul 2000 16:53:14 +0200
+
+pyftpd (0.5) unstable; urgency=low
+
+  * timeout_socket multiple socket close fixes
+  * documentation enhancement
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Fri,  7 Jul 2000 11:42:16 +0200
+
+pyftpd (0.4) unstable; urgency=low
+
+  * passive mode
+  * posix path emulation for windows
+  * numerous bugfixes
+  * limit upload/download speed
+  * tkinter configuration now finished
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Wed,  5 Jul 2000 18:06:17 +0200
+
+pyftpd (0.3) unstable; urgency=low
+
+  * Initial Release.
+
+ -- Radovan Garabik <garabik@melkor.dnp.fmph.uniba.sk>  Tue, 27 Jun 2000 12:48:41 +0200
+
+Local variables:
+mode: debian-changelog
+End:

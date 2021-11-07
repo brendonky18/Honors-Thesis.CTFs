@@ -1,0 +1,1 @@
+chrootlist = [('*', ""), ('anonymous', "c:\\tmp")]

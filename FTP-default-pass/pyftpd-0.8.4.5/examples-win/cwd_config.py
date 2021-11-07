@@ -1,0 +1,3 @@
+cwdlist = [('*', 'c:\\'), ('anonymous', 'c:\\')]
+
+

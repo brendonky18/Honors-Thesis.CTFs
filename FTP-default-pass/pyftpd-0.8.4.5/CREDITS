@@ -1,0 +1,6 @@
+Special thanks go to Peter Cagarda for selfless tedious testing on
+Windows, and to Pavol Domin for not being afraid to install and use
+first pre-alpha version, and to Tomas Stanys and Radoslav Bohm for
+letting me try pyftpd on their computers, and most importantly to Marco
+Amrein for his pyFTPdrop, on which is pyftpd based.
+

@@ -1,0 +1,13 @@
+/etc/pyftpd/auth_PAM_config.py /usr/share/pyftpd/auth_PAM_config.py
+/etc/pyftpd/auth_anonymous_config.py /usr/share/pyftpd/auth_anonymous_config.py
+/etc/pyftpd/ban_config.py /usr/share/pyftpd/ban_config.py
+/etc/pyftpd/cwd_config.py /usr/share/pyftpd/cwd_config.py
+/etc/pyftpd/auth_db_config.py /usr/share/pyftpd/auth_db_config.py
+/etc/pyftpd/auth_file_config.py /usr/share/pyftpd/auth_file_config.py
+/etc/pyftpd/iplimit_config.py /usr/share/pyftpd/iplimit_config.py
+/etc/pyftpd/limit_config.py /usr/share/pyftpd/limit_config.py
+/etc/pyftpd/speed_config.py /usr/share/pyftpd/speed_config.py
+/etc/pyftpd/fs_chroot_config.py /usr/share/pyftpd/fs_chroot_config.py
+/etc/pyftpd/config.py /usr/share/pyftpd/config.py
+/etc/pyftpd/perm_acl_config.py /usr/share/pyftpd/perm_acl_config.py
+/etc/pyftpd/log_simple_config.py /usr/share/pyftpd/log_simple_config.py

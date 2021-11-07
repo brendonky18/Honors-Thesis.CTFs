@@ -1,0 +1,19 @@
+Source: pyftpd
+Section: net
+Priority: optional
+Maintainer: Radovan Garabík <garabik@kassiopeia.juls.savba.sk>
+XS-Python-Version: all
+Standards-Version: 3.7.2
+Build-Depends: debhelper (>= 5.0.37.2), python-central (>= 0.5), python | python-dev | python-all-dev
+
+Package: pyftpd
+Architecture: all
+XB-Python-Version: ${python:Versions}
+Depends: ${python:Depends}, ${misc:Depends}
+Recommends: python-tk
+Pre-Depends: python-central
+Description: ftp daemon with advanced features
+ multithreaded ftp daemon written in python, featuring advanced
+ permission scheme, upload/download speed throttling, 
+ GUI configuration, internal database of users and more.
+ Does not need to run as root.
