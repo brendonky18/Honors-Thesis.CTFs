@@ -1,4 +1,4 @@
-This *README* is meant as a guide for instructors who wish to use any of these modules as instructions. Do not provide students with access to this file as it contains all of the solutions for each of the problems. 
+This *README* is meant as a guide for instructors who wish to use any of these modules on how to set up the environment to run these modules. Do not provide students with access to this file as it contains all of the solutions for each of the problems. 
 
 # CTF 1
 ## Solution
@@ -31,12 +31,13 @@ Otherwise there is no special setup required for the client machines.
 ## Student Instructions
 You should provide students with the following instructions:
 
-> There is an FTP server running on port 2121 in the same network as you are. Inside this server there is a file titled `FLAG` which you must retrive and submit to complete this assignment. The ftp server running is `pyftp 0.8.4.5`, which was available on Debian Release: 5.0.4 in 2009. The original source code for this is available [here](http://kassiopeia.juls.savba.sk/~garabik/software/pyftpd/), however as this is an insecure http connection, there is also a [mirror](https://github.com/brendonky18/CTFs/tree/main/FTP-default-pass/pyftpd-0.8.4.5) of source code available. 
+> There is an FTP server running on port 2121 in the same network as you are. Inside this server there is a file titled `FLAG` which you must retrive and submit to complete this assignment. The ftp server running is `pyftp 0.8.4.5`, which was actually available on Debian Release: 5.0.4 back in 2009. The original source code for this is available [here](http://kassiopeia.juls.savba.sk/~garabik/software/pyftpd/), however this is only available through an insecure http connection. Instead, I have created a [mirror](https://github.com/brendonky18/CTFs/tree/main/FTP-default-pass/pyftpd-0.8.4.5) of the source code. 
 > 
 > Your task is to *reverse engineer* this program in order to discover a vulnerability which will allow you to capture the `FLAG`. 
 > 
-> **Reverse Engineering** is the process of dismantling and examining a programs source code - or sometimes even the assembly or raw binaries - in order to understand what it does, and how it works. 
+> **Reverse Engineering** is the process of dismantling and examining a programs source code — sometimes even the assembly or raw binaries, which won't be necessary for this module — in order to understand what it does, how it works, and for our purposes, how it can be exploited. 
 > 
-> If you are not familiar with FTP, a list of commands you can use is available [here](https://en.wikipedia.org/wiki/List_of_FTP_commands).
+> If you are not familiar with FTP, it stands for **F**ile **T**ransferr **P**rotocol, and was designed to allow users to remotely access files stored on a server. 
+> A list of FTP commands is available [here](https://en.wikipedia.org/wiki/List_of_FTP_commands).
 > 
 > Good luck!
