@@ -1,8 +1,11 @@
+# Archived
+This repository has been archived, the working repository can be found [here](https://github.com/brendonky18/Honors-Thesis).
+
 This *README* is meant as a guide for instructors who wish to use any of these modules on how to set up the environment to run these modules. Do not provide students with access to this file as it contains all of the solutions for each of the problems. 
 
 # CTF 1
 ## Solution
-The solution to this module can be found [here](/FTP-default-pass/SOLUTION.md)
+The solution to this module can be found [here](/FTP-default-pass/SOLUTION.md).
 
 ## Setup Instructions
 You will need two separate machines: one to act as the server, and one which will the students will use as the client to access the server. Both machines must be in the same network, or otherwise be abbessible to each other over the internet.
