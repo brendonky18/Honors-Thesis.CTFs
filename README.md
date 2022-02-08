@@ -1,5 +1,5 @@
-# Archived
-This repository has been archived, the working repository can be found [here](https://github.com/brendonky18/Honors-Thesis).
+# Note
+This repository is a submodule that is part of my senior thesis research. You may clone this if you are only interested in the CTFs, however the full repository can be found [here](https://github.com/brendonky18/Honors-Thesis).
 
 This *README* is meant as a guide for instructors who wish to use any of these modules on how to set up the environment to run these modules. Do not provide students with access to this file as it contains all of the solutions for each of the problems. 
 
