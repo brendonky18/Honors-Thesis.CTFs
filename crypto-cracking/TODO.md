@@ -18,10 +18,11 @@
    - [ ] Create docker network
      - [ ] Create dummy containers on network
    - [ ] Create docker container running server
-   - [ ] Create docker container for each client
+   - [ ] Create docker container for client
      - Brute force
      - Small *e*
      - Fermat
+     - Has all needed python packages
      - Has tcpdump
    - [ ] Create docker container for student
      - Has all of the necessary tools
