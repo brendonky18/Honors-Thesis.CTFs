@@ -11,7 +11,13 @@
    - [x] Basic server implementation
      - [x] Opens and listens on port
      - [x] Successfully decodes client message
-   - [ ] Each client will send a random number (between 2000 and 65536), which tells the server which port to use for the next phase of the challenge
+ - [ ] Complete startup client script
+   - [ ] At startup, each client will send 2 numbers 
+     - Random numbers? (between 2000 and 65536) or pre-determined numbers?
+     - Tells the server which port to use for the next phase of the challenge
+     - Same numbers will be sent as the messages as well.
+     - Combine all 3 numbers to get the final flag
+ - [ ] Complete startup server script
 
 # Dockerize
  - [ ] Implement in docker
