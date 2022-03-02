@@ -1,3 +1,4 @@
+ # Python implementation
  - [x] Complete client programs
    - [x] Brute forcing small primes
      - Simplest
@@ -7,7 +8,12 @@
      - hardest (unlikely to solve on own w/o prior knowledge)
    - [ ] Refactor common code
  - [ ] Complete server programs
-   - Each client will send a random number (between 2000 and 65536), which tells the server which port to use for the next phase of the challenge
+   - [x] Basic server implementation
+     - [x] Opens and listens on port
+     - [x] Successfully decodes client message
+   - [ ] Each client will send a random number (between 2000 and 65536), which tells the server which port to use for the next phase of the challenge
+
+# Dockerize
  - [ ] Implement in docker
    - [ ] Create docker network
      - [ ] Create dummy containers on network
