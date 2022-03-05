@@ -9,4 +9,4 @@ COPY init_clis.py /usr/share/pyshared/
 
 # ENTRYPOINT [ "python /usr/share/pyshared/cli.py" ]
 # TODO: add host argument later
-ENTRYPOINT [ "python init_clis.py" ]
+ENTRYPOINT [ "python", "init_clis.py" ]
