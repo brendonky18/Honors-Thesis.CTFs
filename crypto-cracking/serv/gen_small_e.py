@@ -22,6 +22,7 @@ def generate():
     int, int, int
         ints corresponding to p, q, and e
     """
+    print("gen_small_e")
     e = 3
 
     invalid = True

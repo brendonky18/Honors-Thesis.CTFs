@@ -13,6 +13,7 @@ def generate():
     int, int, int
         ints corresponding to p, q, and e
     """
+    print("gen_fermat")
     e = 65537
 
     base = randrange(2**1023, 2**1024)

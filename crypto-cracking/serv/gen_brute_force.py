@@ -12,6 +12,7 @@ def generate():
     int, int, int
         ints corresponding to p, q, and e
     """
+    print("gen_brute_force")
     e = 3
 
     
