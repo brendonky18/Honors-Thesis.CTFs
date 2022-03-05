@@ -7,6 +7,7 @@
    - [x] Fermat's factorization
      - hardest (unlikely to solve on own w/o prior knowledge)
    - [ ] Refactor common code
+   - [ ] Change server and client programs to objects
  - [ ] Complete server programs
    - [x] Basic server implementation
      - [x] Opens and listens on port
@@ -15,10 +16,15 @@
    - [ ] At startup, each client will send 2 numbers 
      - Random numbers? (between 2000 and 65536) or pre-determined numbers?
      - Tells the server which port to use for the next phase of the challenge
-     - Same numbers will be sent as the messages as well.
+     - Same numbers will be sent as the encrypted messages as well.
      - Combine all 3 numbers to get the final flag
+   - [ ] Create dummy client connections
+     - Prevents challenge from being cheesed, by forcing them to solve it in the intended order
+     - Sends random data to server
  - [ ] Complete startup server script
-
+   - [ ] Open dummy sockets in response to server
+ - [ ] Restructure into python package
+   - [ ] Clean up imports
 # Dockerize
  - [ ] Implement in docker
    - [ ] Create docker network
@@ -29,6 +35,7 @@
      - Small *e*
      - Fermat
      - Has all needed python packages
+       - [ ] Create separate .txt for requirements list
      - Has tcpdump
    - [ ] Create docker container for student
      - Has all of the necessary tools
