@@ -22,7 +22,6 @@ def generate():
     int, int, int
         ints corresponding to p, q, and e
     """
-    print("gen_small_e")
     e = 3
 
     invalid = True
@@ -41,5 +40,4 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--port", type=int, default=0x666c)
     args = generate()
-    print(args)
     serv.main(*args, p.parse_args().port)

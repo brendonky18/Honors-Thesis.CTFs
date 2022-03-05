@@ -13,7 +13,6 @@ def generate():
     int, int, int
         ints corresponding to p, q, and e
     """
-    print("gen_fermat")
     e = 65537
 
     base = randrange(2**1023, 2**1024)
@@ -38,5 +37,4 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--port", type=int, default=0x666c)
     args = generate()
-    print(args)
     serv.main(*args, p.parse_args().port)

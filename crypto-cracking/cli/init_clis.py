@@ -1,33 +1,45 @@
 from unicodedata import name
-import cli
+from cli import ClientRSA
 import argparse
 from ipaddress import ip_address
 import signal, multiprocessing
+from debugger import Debugger
+
+d = Debugger(True)
+
 
 def main(host: str):
     # TODO: randomly generate ports and send to server
     port = 0x666c, 0x666d, 0x666e
     
     procs = [
-        multiprocessing.Process(target=cli.main, args=(host, port[0]), name="cli1"),
-        # multiprocessing.Process(target=cli.main, args=(host, port[1]), name="cli2"),
-        # multiprocessing.Process(target=cli.main, args=(host, port[2]), name="cli3")
+        multiprocessing.Process(target=ClientRSA, args=(host, port[0]), name="cli1"),
+        multiprocessing.Process(target=ClientRSA, args=(host, port[1]), name="cli2"),
+        multiprocessing.Process(target=ClientRSA, args=(host, port[2]), name="cli3")
     ]
 
     for p in procs:
-        print("Spawning client process")
+        d.info("Spawning client process")
         p.start()
-    print("All clients spawned")
+    d.info("All clients spawned")
 
     def cleanup(*args):
         for p in procs: 
             p.join()
         
-        print("\nExiting main")
+        d.info("Exiting main")
         exit()
 
     signal.signal(signal.SIGINT, cleanup)
     signal.signal(signal.SIGTERM, cleanup)
+
+    while True:
+        d.info("Type \"q\" to quit the program")
+        val = input()
+        if val == "q":
+            cleanup()
+        else:
+            d.warn("Ignoring input")
 
 if __name__ == "__main__":
     p = argparse.ArgumentParser()

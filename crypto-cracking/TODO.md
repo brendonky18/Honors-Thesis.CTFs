@@ -7,7 +7,7 @@
    - [x] Fermat's factorization
      - hardest (unlikely to solve on own w/o prior knowledge)
    - [ ] Refactor common code
-   - [ ] Change server and client programs to objects
+   - [x] Change server and client programs to objects
  - [ ] Complete server programs
    - [x] Basic server implementation
      - [x] Opens and listens on port
@@ -25,6 +25,7 @@
    - [ ] Open dummy sockets in response to server
  - [ ] Restructure into python package
    - [ ] Clean up imports
+   - [ ] Combine two identical instances of `debugger.py` <sup>[1](serv/debugger.py), [2](cli/debugger.py)</sup>
 # Dockerize
  - [ ] Implement in docker
    - [ ] Create docker network
