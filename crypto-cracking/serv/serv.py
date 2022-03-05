@@ -21,7 +21,7 @@ def main(p: int, q: int, e: int, listen_port: int):
     threads = []
 
     listen_sock = socket(AF_INET, SOCK_STREAM)
-    listen_sock.bind(("localhost", listen_port))
+    listen_sock.bind(("0.0.0.0", listen_port))
 
     def cleanup(*args):
         for t in threads: 
@@ -29,26 +29,28 @@ def main(p: int, q: int, e: int, listen_port: int):
         
         listen_sock.close()
         
-        print("\nExiting")
-        exit()
+        print("\nExiting serv")
+        exit(0)
 
     signal.signal(signal.SIGINT, cleanup)
     signal.signal(signal.SIGTERM, cleanup)
 
-
+    print("Listening")
     listen_sock.listen()
 
     while True:
         cli, addr = listen_sock.accept()
+        print("New connection")
         # print("client connected")
         cli.settimeout(timeout)
 
         cli_thread = threading.Thread(target=handle_connection, args=(cli, addr))
         threads.append(cli_thread)
+        print("thread ready")
         cli_thread.start()
     
 def handle_connection(cli, addr):
-    print("New connection")
+    print("Handle connection")
 
     buf = 1024
 
