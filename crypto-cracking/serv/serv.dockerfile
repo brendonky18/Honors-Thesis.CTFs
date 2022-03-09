@@ -7,13 +7,7 @@ USER servadmin
 
 WORKDIR /srv/RSA
 
-COPY serv.py /srv/RSA
-COPY init_servs.py /srv/RSA
-COPY RSA.py /srv/RSA
-COPY gen_brute_force.py /srv/RSA/
-COPY gen_small_e.py /srv/RSA/
-COPY gen_fermat.py /srv/RSA/
-
+COPY . /srv/RSA
 # TODO: won't be necessary later,
 # networking will be handled over docker network instead of bridge network
 EXPOSE 26220
