@@ -9,6 +9,7 @@ from typing import *
 from multiprocessing import current_process
 from threading import current_thread
 from debugger import Debugger
+from queue import Queue
 
 class ServerRSA:
     _timeout = 300 # 5 minutes
@@ -20,7 +21,7 @@ class ServerRSA:
 
     key_msg = b"KEY"
 
-    def __init__(self, key_generator: Callable, listen_port: int):
+    def __init__(self, key_generator: Callable, listen_port: int, status: Queue):
         """Initializes and runs the server
 
         Parameters
@@ -57,6 +58,7 @@ class ServerRSA:
         signal.signal(signal.SIGTERM, cleanup)
 
         _d.ok(f"Listening on {self._listen_port}")
+        status.put(True)
         listen_sock.listen()
 
         while True:
@@ -65,7 +67,13 @@ class ServerRSA:
             # _d.printf(f"client connected")
             cli_sock.settimeout(self._timeout)
 
-            cli_thread = threading.Thread(target=self.handle_connection, args=(cli_sock, addr), name=f"Conn {cli_sock.getpeername()[0]}:{cli_sock.getpeername()[1]}")
+            try: 
+                peer = cli_sock.getpeername()
+            except OSError as e:
+                # most likely to occur because of an nmap to the port
+                peer = ("?.?.?.?", "?")
+
+            cli_thread = threading.Thread(target=self.handle_connection, args=(cli_sock, addr), name=f"Conn {peer[0]}:{peer[1]}")
             self._threads.append(cli_thread)
             _d.printf(f"Thread ready")
             cli_thread.start()
