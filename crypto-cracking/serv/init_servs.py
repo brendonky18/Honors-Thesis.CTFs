@@ -59,6 +59,7 @@ def main():
                 user_input = input()
             except EOFError as e:
                 d.err(f"{e}. Could not read input")
+                break
             else:
                 out.put(user_input)
     
