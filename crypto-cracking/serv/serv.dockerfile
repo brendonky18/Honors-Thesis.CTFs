@@ -14,6 +14,8 @@ EXPOSE 26220
 EXPOSE 26221
 EXPOSE 26222
 
+# TODO: make generic container with installed python dependencies
+#       will make buildin containers faster
 RUN export PYTHONPATH=/usr/bin/python && \
     pip install --upgrade pip && \
     # pip install threading && \

@@ -12,6 +12,8 @@ WORKDIR /usr/share/pyshared/
 
 COPY . /usr/share/pyshared/
 
+# TODO: make generic container with installed python dependencies
+#       will make buildin containers faster
 RUN export PYTHONPATH=/usr/bin/python && \
     pip install --upgrade pip && \
     # pip install threading && \
