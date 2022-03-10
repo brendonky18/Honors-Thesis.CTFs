@@ -4,19 +4,17 @@ from ipaddress import ip_address
 from time import sleep
 import signal
 from random import randrange
-from threading import current_thread
+from multiprocessing import current_process
 from sympy import re
 from debugger import Debugger
 
-
 # serv = ("10.0.0.115", 0x666c)
 flag = 1
-
 class ClientRSA:
     host: str
     port: int
 
-    def __init__(self, host: str, port: int):
+    def __init__(self, host: str, port: int, conn_attempts: int = 3, conn_wait: float = 5):
         """Initializes and runs the client
 
         Parameters
@@ -25,9 +23,15 @@ class ClientRSA:
             IP address of the server
         port : int
             Port to connect to
+        conn_attempts : int, optional
+            The number of times to attempt to connect to the server
+        conn_wait : float, optional
+            The amount, in seconds, to wait between connection attempts
         """
+        if conn_attempts < 1:
+            raise ValueError("conn_attempts cannot be less than 1")
 
-        _d = Debugger(True, current_thread().name)
+        _d = Debugger(True, current_process().name)
         _d.printf(f"Initializing client")
 
         self.host = host
@@ -36,17 +40,27 @@ class ClientRSA:
 
         # connect to server
         serv_sock = socket(AF_INET, SOCK_STREAM)
-        result = serv_sock.connect_ex((self.host, self.port))
 
         def cleanup(*args):
             serv_sock.close()
             _d.printf(f"Exiting cli")
             exit(0)
-        
-        if result != 0:
-            _d.printf(f"Err: Port {self.port} on {self.host} not open")
-            cleanup()
 
+        num_attempts = 0
+        while conn_attempts > num_attempts:
+            result = serv_sock.connect_ex((self.host, self.port))
+            if result != 0:
+                _d.warn(f"Port {self.host}:{self.port} not open. Will try again in {conn_wait} second{'s' if conn_wait > 1 else ''}")
+            else:
+                _d.ok(f"Connected to {self.host}:{self.port}")
+                break
+
+            num_attempts += 1
+            sleep(conn_wait)
+
+        if result != 0:
+            _d.err(f"Port {self.host}:{self.port} not open. Unable to establish connection after {conn_attempts} attempts")
+            cleanup()
 
         signal.signal(signal.SIGINT, cleanup)
         signal.signal(signal.SIGTERM, cleanup)
