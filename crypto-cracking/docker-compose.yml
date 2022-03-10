@@ -1,0 +1,32 @@
+version: '2'  
+networks:
+  docker_net:
+    # name: docker_net
+    driver: bridge
+    ipam:
+      config:
+        - subnet:  10.0.0.0/24
+          gateway: 10.0.0.1
+
+services:
+  cli:
+    hostname: cli0
+    # TODO: don't rebuild image every time
+    build: 
+      context: cli/
+      dockerfile: cli.dockerfile
+
+    # image: brendonky18/ctfs:crypto-cracking-cli
+    networks:
+      docker_net:
+        ipv4_address: 10.0.0.11
+
+  serv:
+    hostname: serv0
+    build: 
+        context: serv/
+        dockerfile: serv.dockerfile
+    # image: brendonky18/ctfs:crypto-cracking-serv
+    networks:
+      docker_net:
+        ipv4_address: 10.0.0.22
