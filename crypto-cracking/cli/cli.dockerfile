@@ -5,6 +5,9 @@ RUN mkdir /usr/share/pyshared/
 
 USER user_1
 
+# DEBUGGING
+# RUN hostname -I
+
 WORKDIR /usr/share/pyshared/
 
 COPY . /usr/share/pyshared/
@@ -16,5 +19,5 @@ RUN export PYTHONPATH=/usr/bin/python && \
     pip install sympy 
 
 # ENTRYPOINT [ "python /usr/share/pyshared/cli.py" ]
-# TODO: add host argument later
-ENTRYPOINT [ "python", "init_clis.py" ]
+# TODO: make cmd variable?
+ENTRYPOINT [ "python", "init_clis.py", "--host", "10.0.0.22" ]
