@@ -9,18 +9,26 @@ from multiprocessing import Queue as PQueue
  
 # TODO: refactor with init_clis.py
 def main():
-    d = Debugger(True)
+    d = Debugger(False)
 
     # tracks if all the servers have started
     status = PQueue()
 
-    # TODO: wait for client to send me the ports I should be using
-    ports = 0x666c, 0x666d, 0x666e
-    procs = [
-        multiprocessing.Process(target=ServerRSA, args=(gen_brute_force.generate, ports[0], status), name="brute_force"),
-        multiprocessing.Process(target=ServerRSA, args=(gen_small_e.generate,     ports[1], status), name="small_e"),
-        multiprocessing.Process(target=ServerRSA, args=(gen_fermat.generate,      ports[2], status), name="fermat")
+    port_base = 0x666c
+    key_generators = [
+        gen_brute_force,
+        gen_small_e,
+        gen_fermat
     ]
+    procs = []
+    for i in range(len(key_generators)):
+        port = port_base + i
+        p = multiprocessing.Process(
+            target=ServerRSA, 
+            args=(key_generators[i].generate, port, status), 
+            name=f"proc_{key_generators[i].__name__}"
+        )
+        procs.append(p)
 
     for p in procs:
         d.printf(f"Spawning server process \"{p.name}\"")

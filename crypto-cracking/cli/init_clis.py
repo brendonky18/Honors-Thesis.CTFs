@@ -8,10 +8,39 @@ from queue import Queue
 import os, sys, ctypes
 
 
-d = Debugger(True)
+d = Debugger(False)
+CONN_ATTEMPTS = 3
+CONN_WAIT = 10
 
 # TODO: refactor with init_servs.py
-def main(host: str):
+def main(host: str, host_num: int=-1):
+    # generates arguments
+    port = 0x666c
+    flag = 1
+    # Message being sent should be the password for the next user
+    if host_num != -1:
+        num_attempts = 0
+        while CONN_ATTEMPTS > num_attempts:
+            file_path = f"/mnt/.share/pass{host_num + 1}"
+            try:
+                with open(file_path, "r") as user_file:
+                    user_info = user_file.read()
+            except FileNotFoundError:
+                d.warn(f"File {file_path} not created. Will try again in {CONN_WAIT} second{'s' if CONN_WAIT > 1 else ''}")
+                num_attempts += 1
+                sleep(CONN_WAIT)
+            else:
+                d.ok(f"Opened file {file_path}")
+                break
+        if CONN_ATTEMPTS == num_attempts:
+            d.err(f"File {file_path} not created. Unable to open after {num_attempts} attempts")
+            exit(1)
+
+        flag_text = f"flag{{{user_info.split(':')[1]}}}"
+        flag = int.from_bytes(flag_text.encode("ascii"), "big")
+
+        port += host_num
+
     # load GLIBC
     libc = ctypes.CDLL(None)
     syscall = libc.syscall
@@ -20,21 +49,18 @@ def main(host: str):
     SYS_KCMP = 312
     KCMP_FILE = 0
 
-    # TODO: randomly generate ports and send to server
-    port = 0x666c, 0x666d, 0x666e
-    
-    procs = [
-        multiprocessing.Process(target=ClientRSA, args=(host, port[0]), name=f"cli-{port[0]}"),
-        multiprocessing.Process(target=ClientRSA, args=(host, port[1]), name=f"cli-{port[1]}"),
-        multiprocessing.Process(target=ClientRSA, args=(host, port[2]), name=f"cli-{port[2]}")
-    ]
+    p = multiprocessing.Process(
+        target=ClientRSA, 
+        args=(host, port), 
+        kwargs={"flag": flag, "conn_attempts": CONN_ATTEMPTS, "conn_wait": CONN_WAIT}, 
+        name=f"cli-{port}"
+    )
+    d.info("Spawning client process")
+    p.start()
 
-    for p in procs:
-        d.info("Spawning client process")
-        p.start()
     d.info("All clients spawned")
 
-    def cleanup(signum: int, frame):
+    def cleanup(signum: int=-1, frame=None):
         """Signal handler to gracefully close terminate the clients and close their sockets
 
         Parameters
@@ -45,8 +71,7 @@ def main(host: str):
             the stack frame at the time of execution
         """
         d.debug("cleanup")
-        for p in procs: 
-            p.terminate()
+        p.terminate()
         d.debug("all procs terminated")
         input_thread.join()
         d.info("Exiting main")
@@ -109,11 +134,8 @@ def main(host: str):
     input_thread = threading.Thread(target=get_input, name="get_input", args=(out,))
     input_thread.start()
 
-    live_procs = procs.copy()
     while running:
-        live_procs = list(filter(lambda proc: proc.is_alive(), live_procs))
-        # d.debug(live_procs)
-        running &= len(live_procs) != 0
+        running &= p.is_alive()
         
         sleep(0.01)
     d.debug("All procs ended")
@@ -122,9 +144,10 @@ def main(host: str):
 if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--host", type=ip_address, default=ip_address("127.0.0.1"))
+    p.add_argument("--hostnum", dest="hostnum", type=int, default=-1)
     args = p.parse_args()
     
-    main(str(args.host))
+    main(str(args.host), args.hostnum)
 
 import string
 string.ascii_letters
