@@ -2,6 +2,8 @@ FROM crypto-cracking:base
 
 ARG USER_NUM
 ENV user_num=${USER_NUM}
+ARG DEBUG
+ENV debug=${DEBUG}
 
 EXPOSE 22
 
@@ -23,11 +25,12 @@ USER user${USER_NUM}
 
 COPY . /usr/share/pyshared/.
 WORKDIR /usr/share/pyshared/
-
-ENTRYPOINT echo rootpass | su root -c "python3 /mnt/.share/key_gen.py -g -u $user_num > /mnt/.share/pass$user_num \
+ENTRYPOINT \
+# echo $debug && echo ${DEBUG}
+echo rootpass | su root -c "python3 /mnt/.share/key_gen.py -g -u $user_num > /mnt/.share/pass$user_num \
 && cat /mnt/.share/pass$user_num | chpasswd \
 & service ssh start \
-& python3 init_clis.py --host 10.0.0.20 --hostnum $user_num \
+& python3 init_clis.py --host 10.0.0.20 --hostnum $user_num $debug\
 & tcpdump -s 0 -U -n -w - -i eth0 not port 22 > /tmp/remote_pcap" 2> \
 # redirect "Password:" prompt
-/dev/null 
+/dev/null

@@ -23,6 +23,10 @@ class Debugger:
         self._debug = set_active
         self._name = name
 
+        if set_active:
+            self.debug("DEBUGGING ENABLED")
+
+
     def _print(self, color: Color, string: str):
         print(f"{f'[{self._name}] ' if self._name else ''}{color}{string}{Color.END}", flush=True)
 

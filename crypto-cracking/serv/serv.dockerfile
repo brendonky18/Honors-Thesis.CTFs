@@ -1,5 +1,8 @@
 FROM crypto-cracking:base
 
+ARG DEBUG
+ENV debug=-${DEBUG}
+
 RUN useradd -ms /bin/bash servadmin
 
 EXPOSE 26220

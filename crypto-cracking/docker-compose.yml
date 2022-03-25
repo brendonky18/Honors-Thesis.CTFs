@@ -12,7 +12,10 @@ networks:
         - subnet:  10.0.0.0/24
 
 services:
+# main services
   cli0: &cli
+    profiles:
+      - main
     depends_on:
       - serv
     hostname: cli0
@@ -40,7 +43,6 @@ services:
     networks:
       docker_net:
         ipv4_address: 10.0.0.10
-
   cli1: 
     <<: *cli
     hostname: cli1
@@ -68,15 +70,80 @@ services:
       docker_net:
         ipv4_address: 10.0.0.12
 
-  serv:
+# testing services
+  cli_test0: 
+    <<: *cli
+    profiles:
+      - test
+    depends_on:
+      - serv-test
+    hostname: cli0
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=0
+        - DEBUG=-v
+    ports:
+      - "2220:22"
+    networks:
+      docker_net:
+        ipv4_address: 10.0.0.10
+  cli_test1: 
+    <<: *cli
+    profiles:
+      - test
+    depends_on:
+      - serv-test
+    hostname: cli1
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=1
+        - DEBUG=-v
+    ports:
+      - "2221:22"
+    networks:
+      docker_net:
+        ipv4_address: 10.0.0.11
+  cli_test2: 
+    <<: *cli
+    profiles:
+      - test
+    depends_on:
+      - serv-test
+    hostname: cli2
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=2
+        - DEBUG=-v
+    ports:
+      - "2222:22"
+    networks:
+      docker_net:
+        ipv4_address: 10.0.0.12
+
+# server
+  serv: &serv
+    profiles:
+      - main
     privileged: true
     hostname: serv0
     volumes: *pass-share
-    build: 
+    build: &serv-build
         context: serv/
         dockerfile: serv.dockerfile
     # image: brendonky18/ctfs:crypto-cracking-serv
     networks:
       docker_net:
         ipv4_address: 10.0.0.20
+    
+  serv-test:
+    <<: *serv
+    profiles:
+      - test
+    build:
+      <<: *serv-build
+      args: 
+        - DEBUG=-v
     

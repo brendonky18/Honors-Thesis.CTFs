@@ -8,9 +8,10 @@ from queue import Queue
 import os, sys, ctypes
 
 
-d = Debugger(False)
+d: Debugger
 CONN_ATTEMPTS = 3
 CONN_WAIT = 10
+DEBUG_VERBOSE = False
 
 # TODO: refactor with init_servs.py
 def main(host: str, host_num: int=-1):
@@ -35,8 +36,9 @@ def main(host: str, host_num: int=-1):
         if CONN_ATTEMPTS == num_attempts:
             d.err(f"File {file_path} not created. Unable to open after {num_attempts} attempts")
             exit(1)
-
+          
         flag_text = f"flag{{{user_info.split(':')[1]}}}"
+        d.debug(f"flag: {flag_text}")
         flag = int.from_bytes(flag_text.encode("ascii"), "big")
 
         port += host_num
@@ -52,7 +54,7 @@ def main(host: str, host_num: int=-1):
     p = multiprocessing.Process(
         target=ClientRSA, 
         args=(host, port), 
-        kwargs={"flag": flag, "conn_attempts": CONN_ATTEMPTS, "conn_wait": CONN_WAIT}, 
+        kwargs={"flag": flag, "conn_attempts": CONN_ATTEMPTS, "conn_wait": CONN_WAIT, "verbose": DEBUG_VERBOSE}, 
         name=f"cli-{port}"
     )
     d.info("Spawning client process")
@@ -145,9 +147,10 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument("--host", type=ip_address, default=ip_address("127.0.0.1"))
     p.add_argument("--hostnum", dest="hostnum", type=int, default=-1)
+    p.add_argument("-v", default=False, action="store_true")
     args = p.parse_args()
-    
-    main(str(args.host), args.hostnum)
+    DEBUG_VERBOSE = args.v
+    d = Debugger(DEBUG_VERBOSE)
+    d.info(args)
 
-import string
-string.ascii_letters
+    main(str(args.host), args.hostnum)

@@ -3,10 +3,11 @@ import argparse
 from random import SystemRandom as SRand
 from random import shuffle
 from functools import *
-# char_set = string.ascii_uppercase
-char_set = string.ascii_letters + string.digits
+# Listed in order of ascii value
+char_set = string.digits + string.ascii_uppercase + string.ascii_lowercase
+# char_set = string.ascii_letters #+ string.digits
 bin_char_set = bytes(char_set, "ascii")
-KEY_LEN = 8
+KEY_LEN = 10
 MIN_VAL = bin_char_set[0]
 MAX_VAL = bin_char_set[-1]
 AVG_VAL = sum(bin_char_set) / len(bin_char_set)
@@ -15,7 +16,6 @@ MAGIC = round(AVG_VAL * KEY_LEN)
 
 def gen() -> str:
     """Generates a random 8-byte key which can easily be validated for correctness
-
     Returns
     -------
     str
@@ -24,7 +24,7 @@ def gen() -> str:
 
     # # gets 6 random ascii chars, at least 1 of which is a digit
     # key_base = bytes("".join(SRand().choice(char_set) for i in range(5)), "ascii") + bytes(SRand().choice(string.digits), "ascii")
-    key_base = bytes("".join(SRand().choice(char_set) for i in range(KEY_LEN - 3) + SRand().choice(string.digits)), "ascii")
+    key_base = bytes("".join(SRand().choice(char_set) for i in range(KEY_LEN - 2)), "ascii") #+ bytes(SRand().choice(string.digits), "ascii")
 
     # splits key in half
     mid = len(key_base) // 2
@@ -40,34 +40,38 @@ def gen() -> str:
     else:
         lo_key = key2
         hi_key = key1
-
+    print("a")
+    print(bin_char_set)
+    print(char_set)
     # ensures that our chars are within the specified char set
+    print(f"MIN {MIN_VAL}")
+    print(f"MAX {MAX_VAL}")
     while MIN_VAL < lo_key and hi_key < MAX_VAL:
+        print("b")
         if lo_key in bin_char_set and hi_key in bin_char_set:
             key_ba = bytearray(key_base + lo_key.to_bytes(1, "big") + hi_key.to_bytes(1, "big"))
             shuffle(key_ba)
+            print(key_ba)
             return key_ba.decode("ascii")
         else:
             lo_key -= 1
             hi_key += 1
 
+    print("c")
     # bad set of starting chars, try again
     return gen()
 
 def validate(key) -> bool:
     """Check if the passed key is valid
     - A key is valid if all the bytes in the key sum to the magic number
-
     Parameters
     ----------
     key : str, bytes, or bytearray
         the key to be validated
-
     Returns
     -------
     bool
         True if the key is valid
-
     Raises
     ------
     ValueError
