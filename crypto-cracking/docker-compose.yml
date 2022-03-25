@@ -1,4 +1,8 @@
-version: '2'  
+version: '3.2'  
+volumes:
+  pass-share:
+
+
 networks:
   docker_net:
     # name: docker_net
@@ -6,27 +10,73 @@ networks:
     ipam:
       config:
         - subnet:  10.0.0.0/24
-          gateway: 10.0.0.1
 
 services:
-  cli:
+  cli0: &cli
+    depends_on:
+      - serv
     hostname: cli0
+    volumes: &pass-share
+      - type: volume
+        source: pass-share
+        target: /mnt/.share
+        volume:
+          nocopy: true
+
     # TODO: don't rebuild image every time
-    build: 
+    build: &cli-build
       context: cli/
       dockerfile: cli.dockerfile
+      args:
+        - USER_NUM=0
+    ports:
+      - "2220:22"
+    
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
 
     # image: brendonky18/ctfs:crypto-cracking-cli
     networks:
       docker_net:
+        ipv4_address: 10.0.0.10
+
+  cli1: 
+    <<: *cli
+    hostname: cli1
+    
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=1
+    ports:
+      - "2221:22"
+    
+    networks:
+      docker_net:
         ipv4_address: 10.0.0.11
+  cli2: 
+    <<: *cli
+    hostname: cli2
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=2
+    ports:
+      - "2222:22"
+    networks:
+      docker_net:
+        ipv4_address: 10.0.0.12
 
   serv:
+    privileged: true
     hostname: serv0
+    volumes: *pass-share
     build: 
         context: serv/
         dockerfile: serv.dockerfile
     # image: brendonky18/ctfs:crypto-cracking-serv
     networks:
       docker_net:
-        ipv4_address: 10.0.0.22
+        ipv4_address: 10.0.0.20
+    
