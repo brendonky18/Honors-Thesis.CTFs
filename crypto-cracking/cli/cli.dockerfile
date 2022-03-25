@@ -1,25 +1,33 @@
-FROM python:3
+FROM crypto-cracking:base
 
-RUN useradd -ms /bin/bash user_1
+ARG USER_NUM
+ENV user_num=${USER_NUM}
+
+EXPOSE 22
+
 RUN mkdir /usr/share/pyshared/
+RUN mkdir /run/sshd
 
-USER user_1
+# Wireshark config
+RUN groupadd wireshark
+RUN chmod +x /usr/bin/dumpcap
 
-# DEBUGGING
-# RUN hostname -I
+RUN mkfifo /run/remote_pcap
 
+# Manage User
+RUN useradd -m -u 100${USER_NUM} -s /bin/bash user${USER_NUM}
+RUN echo 'root:rootpass' | chpasswd
+RUN usermod -a -G wireshark user${USER_NUM}
+
+USER user${USER_NUM}
+
+COPY . /usr/share/pyshared/.
 WORKDIR /usr/share/pyshared/
 
-COPY . /usr/share/pyshared/
-
-# TODO: make generic container with installed python dependencies
-#       will make buildin containers faster
-RUN export PYTHONPATH=/usr/bin/python && \
-    pip install --upgrade pip && \
-    # pip install threading && \
-    # pip install import argparse && \
-    pip install sympy 
-
-# ENTRYPOINT [ "python /usr/share/pyshared/cli.py" ]
-# TODO: make cmd variable?
-ENTRYPOINT [ "python", "init_clis.py", "--host", "10.0.0.22" ]
+ENTRYPOINT echo rootpass | su root -c "python3 /mnt/.share/key_gen.py -g -u $user_num > /mnt/.share/pass$user_num \
+&& cat /mnt/.share/pass$user_num | chpasswd \
+& service ssh start \
+& python3 init_clis.py --host 10.0.0.20 --hostnum $user_num \
+& tcpdump -s 0 -U -n -w - -i eth0 not port 22 > /tmp/remote_pcap" 2> \
+# redirect "Password:" prompt
+/dev/null 

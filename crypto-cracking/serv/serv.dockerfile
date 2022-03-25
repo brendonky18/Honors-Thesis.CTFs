@@ -1,25 +1,17 @@
-FROM python:3
+FROM crypto-cracking:base
 
 RUN useradd -ms /bin/bash servadmin
-RUN mkdir /srv/RSA
 
-USER servadmin
-
-WORKDIR /srv/RSA
-
-COPY . /srv/RSA
-# TODO: won't be necessary later,
-# networking will be handled over docker network instead of bridge network
 EXPOSE 26220
 EXPOSE 26221
 EXPOSE 26222
 
-# TODO: make generic container with installed python dependencies
-#       will make buildin containers faster
-RUN export PYTHONPATH=/usr/bin/python && \
-    pip install --upgrade pip && \
-    # pip install threading && \
-    # pip install import argparse && \
-    pip install sympy 
+COPY key_gen.py /tmp
 
-ENTRYPOINT [ "python", "init_servs.py" ]
+# set up python3 server
+RUN mkdir /srv/RSA
+COPY . /srv/RSA
+WORKDIR /srv/RSA
+
+ENTRYPOINT  mv /tmp/key_gen.py /mnt/.share && python3 /mnt/.share/key_gen.py -g -u 3 > /mnt/.share/pass3 \
+& python3 init_servs.py
