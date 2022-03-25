@@ -1,4 +1,5 @@
 from random import randrange
+from tabnanny import verbose
 import threading
 import RSA
 import sympy
@@ -10,6 +11,7 @@ from multiprocessing import current_process
 from threading import current_thread
 from debugger import Debugger
 from queue import Queue
+import json
 
 class ServerRSA:
     _timeout = 300 # 5 minutes
@@ -19,12 +21,20 @@ class ServerRSA:
     _pub_key: int
     _priv_key: int
 
-    a_key_msg = b"RSA_KEY:"
-    s_key_msg = b"XOR_KEY:"
-    key_l_msg = b"KEY_LEN:"
-    flag_msg  = b"FLAG:"
+    MSG_TYPE = "MSG_TYPE"
+    ASYM_KEY_MSG = "RSA_KEY"
+    ASYM_KEY_ACK = ASYM_KEY_MSG + "_ACK"
+    SECRET_FLAG = "SECRET_FLAG"
+    DATA = "DATA"
 
-    def __init__(self, key_generator: Callable, listen_port: int, status: Queue):
+    SYM_KEY_MSG = "XOR_KEY"
+    MOD = "N"
+    EXP = "E"
+    KEY_LEN_MSG = "KEY_LEN"
+    FLAG_LEN_MSG = "FLAG_LEN"
+    ENC_FLAG_MSG  = "ENC_FLAG"
+
+    def __init__(self, key_generator: Callable, listen_port: int, status: Queue, verbose: bool=False):
         """Initializes and runs the server
 
         Parameters
@@ -34,7 +44,7 @@ class ServerRSA:
         listen_port : int
             the port to listen for incoming connections on
         """
-        _d = Debugger(False, current_process().name)
+        _d = Debugger(verbose, current_process().name)
         _d.printf(f"Initializing server")
 
         self._key_gen = key_generator
@@ -92,7 +102,7 @@ class ServerRSA:
             the client's ip address
         """
 
-        _d = Debugger(False, current_thread().name)
+        _d = Debugger(verbose, current_thread().name)
         _d.printf(f"Handle connection")
 
         buf = 1024
@@ -101,43 +111,47 @@ class ServerRSA:
             _d.debug("a")
             try:
                 msg = cli_sock.recv(buf)
-                _d.debug(msg)
+                _d.debug(f"Received {msg}")
                 if not msg:
                     _d.printf('Client disconnected')
                     cli_sock.close()
                     return
-                elif self.a_key_msg in msg:
-                    _d.debug(f"priv key: {self._priv_key[1]}")
-                    _d.debug(f"sending key")
-                    cli_sock.send(self._pub_key[0].to_bytes(1024, "big"))
-                    _d.debug(f"sent n")
-                    cli_sock.send(self._pub_key[1].to_bytes(1024, "big"))
-                    _d.debug(f"sent e")
-                elif self.s_key_msg in msg:
-                    # encrypted_key_b, key_len_b, encrypted_flag_b = [m.split(b"::")[1] for m in msg.split(b"::")]
-                    msg, encrypted_flag_b = msg.split(self.flag_msg)
-                    msg, key_len_b = msg.split(self.key_l_msg)
-                    _, encrypted_key_b = msg.split(self.s_key_msg)
-                    # _d.debug([m.split(b":")[1] for m in msg.split()])
-                    _d.debug(f"decoding symmetric key")
-                    # Decrypt the semmetric key
-                    encrypted_key = int.from_bytes(encrypted_key_b, 'big')
-                    symm_key = pow(encrypted_key, self._priv_key[1], self._priv_key[0])
-                    _d.debug(f"Symmetric key: {hex(symm_key)}")
+                elif isinstance(msg, bytes) and isinstance(msg:=json.loads(msg), dict):
+                    if msg[self.MSG_TYPE] == self.ASYM_KEY_MSG:
+                        _d.debug(f"priv key: {self._priv_key[1]}")
+                        payload = json.dumps ({
+                            self.MSG_TYPE: self.ASYM_KEY_ACK,
+                            self.DATA: {
+                                self.MOD: self._pub_key[0],
+                                self.EXP: self._pub_key[1]
+                            }
+                        })
+                        cli_sock.send(payload.encode("ascii"))
+                        _d.debug(f"sent pub key {payload}")
+                    elif msg[self.MSG_TYPE] == self.SECRET_FLAG:
+                        data = msg[self.DATA]
+                        encrypted_flag = data[self.ENC_FLAG_MSG]
+                        key_len = data[self.KEY_LEN_MSG]
+                        encrypted_key = data[self.SYM_KEY_MSG]
+                        flag_len = data[self.FLAG_LEN_MSG]
+                        _d.debug(f"encrypted flag {encrypted_flag}")
+                        _d.debug(f"sym key length {key_len}")
+                        _d.debug(f"encrypted key {encrypted_key}")
 
-                    key_len = int.from_bytes(key_len_b, "big") # 10 bytes to store 1024
-                    _d.debug(f"Key length: {key_len}")
+                        _d.debug(f"decoding symmetric key")
+                        # Decrypt the semmetric key\
+                        symm_key = pow(encrypted_key, self._priv_key[1], self._priv_key[0])
+                        _d.debug(f"Symmetric key: {symm_key}")
 
-                    while key_len < 16:
-                        symm_key = (symm_key << (key_len * 8)) | symm_key
-                        key_len *= 2
+                        _d.debug(f"Key length: {key_len}")
 
-                    # Decrypt the message
-                    encrypted_flag = int.from_bytes(encrypted_flag_b, "big")
-                    flag = encrypted_flag ^ symm_key
-                    flag &= 0xffffffffffffffffffffffffffffffff
-                    _d.debug(flag)
-                    _d.ok(f"Decoded message: {int.to_bytes(flag, 16, 'big')[2:]}")
+                        while key_len < flag_len:
+                            symm_key = (symm_key << (key_len * 8)) | symm_key
+                            key_len *= 2
+
+                        # Decrypt the message
+                        flag = (encrypted_flag ^ symm_key) & (2**(flag_len*8) - 1)
+                        _d.ok(f"Decoded message: {flag}={int.to_bytes(flag, 16, 'big')}")
                 else:
                     raise RuntimeError(f"Unknown message {msg}")
             except OSError as e:
@@ -150,8 +164,9 @@ if __name__ == "__main__":
     p = argparse.ArgumentParser()
     p.add_argument('-p', type=int, default=sympy.randprime(2**1, 2**8))
     p.add_argument('-q', type=int, default=sympy.randprime(2**1, 2**8))
-    p.add_argument('-e', type=int)
+    p.add_argument('-e', type=int, default=3)
     p.add_argument("--port", type=int, default=0x666c)
+    p.add_argument("-v", default=False, action="store_true")
     args = p.parse_args()
     # _d.printf(f"got args")
     
@@ -165,4 +180,4 @@ if __name__ == "__main__":
     else:
         e = args.e
 
-    ServerRSA(lambda: (args.p, args.q, e), args.port).run()
+    ServerRSA(lambda: (args.p, args.q, e), args.port, Queue(), args.v).run()

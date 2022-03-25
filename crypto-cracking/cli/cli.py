@@ -2,6 +2,7 @@ from math import ceil, floor, log
 from socket import socket, AF_INET, SOCK_STREAM
 import argparse
 from ipaddress import ip_address
+from sre_parse import FLAGS
 from time import sleep
 import signal
 from random import randint, randrange
@@ -9,14 +10,25 @@ from os import urandom
 from multiprocessing import current_process
 from sympy import re
 from debugger import Debugger
+import json
 
-# serv = ("10.0.0.115", 0x666c)
-# flag = 1
 class ClientRSA:
     host: str
     port: int
 
-    def __init__(self, host: str, port: int, conn_attempts: int = 3, conn_wait: float = 5, flag: int=1):
+    MSG_TYPE = "MSG_TYPE"
+    ASYM_KEY_MSG = "RSA_KEY"
+    SECRET_FLAG = "SECRET_FLAG"
+    DATA = "DATA"
+
+    SYM_KEY_MSG = "XOR_KEY"
+    MOD = "N"
+    EXP = "E"
+    KEY_LEN_MSG = "KEY_LEN"
+    FLAG_LEN_MSG = "FLAG_LEN"
+    ENC_FLAG_MSG  = "ENC_FLAG"
+
+    def __init__(self, host: str, port: int, conn_attempts: int = 3, conn_wait: float = 5, flag: int=1, verbose: bool=False):
         """Initializes and runs the client
 
         Parameters
@@ -33,7 +45,7 @@ class ClientRSA:
         if conn_attempts < 1:
             raise ValueError("conn_attempts cannot be less than 1")
 
-        _d = Debugger(False, current_process().name)
+        _d = Debugger(verbose, current_process().name)
         _d.printf(f"Initializing client")
 
         self.host = host
@@ -43,10 +55,10 @@ class ClientRSA:
         # connect to server
         serv_sock = socket(AF_INET, SOCK_STREAM)
 
-        def cleanup(*args):
+        def cleanup(*args, exit_code=0):
             serv_sock.close()
             _d.printf(f"Exiting cli")
-            exit(0)
+            exit(exit_code)
 
         sleep(3)
 
@@ -73,75 +85,107 @@ class ClientRSA:
         while True:
             # get the pub key
             sleep(randrange(5, 10))
-            serv_sock.send(b"RSA_KEY:")
+            msg = json.dumps({
+                self.MSG_TYPE: self.ASYM_KEY_MSG
+            })
+            msg = msg.encode("ascii")
+            _d.debug(f"Sent {msg}")
+            serv_sock.send(msg)
             try: 
                 msg = serv_sock.recv(1024)
+                _d.debug(f"recieved {msg}")
 
                 if not msg:
                     _d.warn(f"Connection was closed")
                     exit(-1)
-                else:
-                    mod = int.from_bytes(msg, "big")
+                elif isinstance(msg, bytes) and isinstance(msg:=json.loads(msg), dict):
+                    data = msg[self.DATA]
+                    mod = data[self.MOD]
                     _d.info(f"mod: {mod}")
-                    msg = serv_sock.recv(1024)
-                    pub_exponent = int.from_bytes(msg, "big")
+                    pub_exponent = data[self.EXP]
                     _d.info(f"e: {pub_exponent}")
+                else:
+                    raise RuntimeError(f"Unknown message {msg}")
             except OSError as e:
                 _d.err(e)
-                exit(-2)
+                cleanup(-2)
+            except ValueError as e:
+                _d.err(e)
+                cleanup(-3)
+            except RuntimeError as e:
+                _d.err(e)
+                cleanup(-4)
 
             # Length of the flag in bytes
-            FLAG_LEN = 16
+            FLAG_LEN = 0x10
+            FULL_LEN = 0x20
+            SALT_LEN = FULL_LEN - FLAG_LEN
             # calculate how many bytes can fit
-            max_bytes = floor(log(mod, 256))
-            _d.debug(f"max bytes {max_bytes}")
-            key_byte_len = 1
-            if max_bytes < 1:
-                raise Exception(f"Length of key cannot be less than 1 byte. n={mod}, e={e}")
-            else:
-                key_byte_len = 2**(max_bytes - 1).bit_length()
+            a_max_bytes = floor(log(mod, 256))
+            _d.debug(f"max bytes {a_max_bytes}")
+            key_len = 1
+            if a_max_bytes < 1:
+                raise Exception(f"Length of key cannot be less than 1 byte. n={mod}, e={pub_exponent}")
+            elif a_max_bytes > 1:
+                key_len = 2**(a_max_bytes - 1).bit_length()
             
             # calculate a key that will fit
-            while key_byte_len > max_bytes:
-                key_byte_len = key_byte_len // 2
+            while key_len > a_max_bytes:
+                key_len = key_len // 2
 
-            _d.debug(f"Key length={key_byte_len}")
-            if key_byte_len < 4:
+            _d.debug(f"Asym key length={key_len}")
+            if key_len < 4:
                 _d.warn("Key lengths less than 4 are trivial to determine due to the flag's format")
 
             symm_key = 0
-            for b in range(key_byte_len * 8):
+            for b in range(key_len * 8):
                 symm_key <<=1 
                 symm_key |= randint(0, 1)
 
-            # send symm key to server
-            encrypted_symm_key = pow(symm_key, pub_exponent, mod)
-            payload = b"XOR_KEY:" + encrypted_symm_key.to_bytes(512, "big")
-            _d.debug(f"Symmetric key {hex(symm_key)}")
-            _d.debug(f"Encrypted symmetric key {hex(encrypted_symm_key)}")
-
-            # send key length
-            payload += b"KEY_LEN:" + int.to_bytes(key_byte_len, 10, "big")
-            _d.debug(f"Key len {key_byte_len}")
 
             # generate salt
             salt = randint(0,1)
-            for i in range(FLAG_LEN):
+            for i in range(SALT_LEN * 8):
                 salt <<= 1
                 salt |= randint(0,1)
 
-            salted_flag = (salt << (14 * 8)) | flag
+            salted_flag = (salt << (FLAG_LEN * 8)) | flag
+            # salted_flag = flag
+            encrypted_symm_key = pow(symm_key, pub_exponent, mod)
 
-            # encrypt flag
-            while key_byte_len < FLAG_LEN:
-                symm_key = symm_key << (key_byte_len * 8) | symm_key
-                key_byte_len *= 2
+            _d.debug(f"Symmetric key {symm_key}")
 
-            encrypted_flag = symm_key ^ salted_flag
-            encrypted_flag &= 0xffffffffffffffffffffffffffffffff
-            _d.debug(f"Encrypted flag {hex(encrypted_flag)}")
-            payload += b"FLAG:" + int.to_bytes(encrypted_flag, 16, "big")
-            serv_sock.send(payload)
+            # Concatenate the symmetric key so it's long enough to encrypt the whole flag
+            i = key_len
+            while i < FULL_LEN:
+                symm_key = symm_key << (i * 8) | symm_key
+                i *= 2
+
+            _d.debug(f"Padded sym key {symm_key}")
+
+            # Encrypt the flag w/ the symmetric key, and the truncate it to the apprioate length
+            encrypted_flag = symm_key ^ salted_flag & 2**(FULL_LEN * 8) - 1
+            _d.debug(f"salted flag {salted_flag}")
+            _d.debug(f"Encrypted flag {encrypted_flag}")
+            # payload = b"XOR_KEY:" + encrypted_symm_key.to_bytes(512, "big")
+            # payload += b"KEY_LEN:" + int.to_bytes(key_byte_len, 10, "big")
+            # payload += b"FLAG:" + int.to_bytes(encrypted_flag, 16, "big")
+            # send symm key info to server
+            _d.debug(f"Encrypted symmetric key {encrypted_symm_key}")
+            _d.debug(f"Asym key len {key_len}")
+            payload = json.dumps({
+                self.MSG_TYPE: self.SECRET_FLAG,
+                self.DATA: {
+                    self.SYM_KEY_MSG: encrypted_symm_key,
+                    self.KEY_LEN_MSG: key_len,
+                    self.FLAG_LEN_MSG: FLAG_LEN,
+                    self.ENC_FLAG_MSG: encrypted_flag
+                }
+            })
+            payload_msg = payload.encode("ascii")
+            serv_sock.send(payload_msg)
+            _d.debug(f"Sent {payload_msg}")
+
 
 
 if __name__ == "__main__":
@@ -149,6 +193,9 @@ if __name__ == "__main__":
     p.add_argument("--host", type=ip_address, default=ip_address("127.0.0.1"))
     p.add_argument("--port", type=int, default=0x666c)
     p.add_argument("--flag", type=int, default=1)
+    p.add_argument("-v", default=False, action="store_true")
     args = p.parse_args()
     
-    ClientRSA(str(args.host), args.port, args.flag).run()
+    print(f"FLAG {args.flag}")
+
+    ClientRSA(str(args.host), args.port, flag=args.flag, verbose=args.v).run()
