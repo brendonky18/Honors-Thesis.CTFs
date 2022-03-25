@@ -17,12 +17,12 @@ def generate():
     
     invalid = True
     while invalid:
-        p = sympy.randprime(2**1, 2**32)
+        p = sympy.randprime(2**16, 2**24)
         invalid = (p-1) % e == 0
     
     invalid = True
     while invalid:
-        q = sympy.randprime(2**31, 2**32)
+        q = sympy.randprime(2**19, 2**24)
         invalid = p == q or (q-1) % e == 0
 
     return p, q, e
