@@ -25,7 +25,7 @@ def is_prime(n: int) -> bool:
 
 def main(self):
 
-    messages = [int.from_bytes(f"Flag {i}".encode(), "little") for i in range(0, 3)]
+    messages = [int.from_bytes(f"Flag {i}".encode(), "big") for i in range(0, 3)]
 
     # brute force small primes
     pub_key, priv_key = RSA.calc_keys
