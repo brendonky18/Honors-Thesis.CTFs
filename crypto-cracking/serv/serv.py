@@ -19,7 +19,10 @@ class ServerRSA:
     _pub_key: int
     _priv_key: int
 
-    key_msg = b"KEY"
+    a_key_msg = b"RSA_KEY:"
+    s_key_msg = b"XOR_KEY:"
+    key_l_msg = b"KEY_LEN:"
+    flag_msg  = b"FLAG:"
 
     def __init__(self, key_generator: Callable, listen_port: int, status: Queue):
         """Initializes and runs the server
@@ -31,7 +34,7 @@ class ServerRSA:
         listen_port : int
             the port to listen for incoming connections on
         """
-        _d = Debugger(True, current_process().name)
+        _d = Debugger(False, current_process().name)
         _d.printf(f"Initializing server")
 
         self._key_gen = key_generator
@@ -89,31 +92,56 @@ class ServerRSA:
             the client's ip address
         """
 
-        _d = Debugger(True, current_thread().name)
+        _d = Debugger(False, current_thread().name)
         _d.printf(f"Handle connection")
 
         buf = 1024
 
         while True:
+            _d.debug("a")
             try:
                 msg = cli_sock.recv(buf)
-
+                _d.debug(msg)
                 if not msg:
                     _d.printf('Client disconnected')
                     cli_sock.close()
                     return
-                elif msg == self.key_msg:
-                    # _d.printf(f"sending key")
-                    cli_sock.send(self._pub_key[0].to_bytes(1024, "little"))
-                    # _d.printf(f"sent n")
-                    cli_sock.send(self._pub_key[1].to_bytes(1024, "little"))
-                    # _d.printf(f"sent e")
+                elif self.a_key_msg in msg:
+                    _d.debug(f"priv key: {self._priv_key[1]}")
+                    _d.debug(f"sending key")
+                    cli_sock.send(self._pub_key[0].to_bytes(1024, "big"))
+                    _d.debug(f"sent n")
+                    cli_sock.send(self._pub_key[1].to_bytes(1024, "big"))
+                    _d.debug(f"sent e")
+                elif self.s_key_msg in msg:
+                    # encrypted_key_b, key_len_b, encrypted_flag_b = [m.split(b"::")[1] for m in msg.split(b"::")]
+                    msg, encrypted_flag_b = msg.split(self.flag_msg)
+                    msg, key_len_b = msg.split(self.key_l_msg)
+                    _, encrypted_key_b = msg.split(self.s_key_msg)
+                    # _d.debug([m.split(b":")[1] for m in msg.split()])
+                    _d.debug(f"decoding symmetric key")
+                    # Decrypt the semmetric key
+                    encrypted_key = int.from_bytes(encrypted_key_b, 'big')
+                    symm_key = pow(encrypted_key, self._priv_key[1], self._priv_key[0])
+                    _d.debug(f"Symmetric key: {hex(symm_key)}")
+
+                    key_len = int.from_bytes(key_len_b, "big") # 10 bytes to store 1024
+                    _d.debug(f"Key length: {key_len}")
+
+                    while key_len < 16:
+                        symm_key = (symm_key << (key_len * 8)) | symm_key
+                        key_len *= 2
+
+                    # Decrypt the message
+                    encrypted_flag = int.from_bytes(encrypted_flag_b, "big")
+                    flag = encrypted_flag ^ symm_key
+                    flag &= 0xffffffffffffffffffffffffffffffff
+                    _d.debug(flag)
+                    _d.ok(f"Decoded message: {int.to_bytes(flag, 16, 'big')[2:]}")
                 else:
-                    # _d.printf(f"decoding")
-                    # theoretically we would decrypt the messages here, but the server doesn't actually do anything with them
-                    _d.ok(f"Decoded message: {int.from_bytes(msg, 'little')**self._priv_key[1] % self._priv_key[0]}")
-            except Exception as e:
-                _d.printf(e)
+                    raise RuntimeError(f"Unknown message {msg}")
+            except OSError as e:
+                _d.warn(e)
                 cli_sock.close()
                 exit(-2)
 
