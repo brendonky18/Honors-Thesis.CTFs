@@ -5,9 +5,9 @@ ENV PYTHONPATH="$PYTHONPATH:/usr/bin/python3"
 
 # install packages
 RUN apt update 
-RUN apt install openssh-server tcpdump wireshark python3 python3-pip -y
+RUN apt install git openssh-server tcpdump wireshark python3 python3-pip
 
-RUN pip install sympy 
+RUN pip install sympy git+https://github.com/brendonky18/PyDebugger
 
 # init shared volume
 RUN mkdir /mnt/.share
