@@ -23,8 +23,8 @@ services:
 
     # TODO: don't rebuild image every time
     build: &cli-build
-      # context: cli/
-      dockerfile: https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/cli/cli.dockerfile
+      context: https://github.com/brendonky18/Honors-Thesis.CTFs.git#${BRANCH}:crypto-cracking/cli
+      dockerfile: cli.dockerfile
       args:
         - USER_NUM=0
     
@@ -119,8 +119,8 @@ services:
         target: /mnt/.flag
 
     build: &serv-build
-        # context: serv/
-        dockerfile: https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/serv/serv.dockerfile
+        context: https://github.com/brendonky18/Honors-Thesis.CTFs.git#${BRANCH}:crypto-cracking/serv
+        dockerfile: serv.dockerfile
     # image: brendonky18/ctfs:crypto-cracking-serv
     networks:
       nw0:
