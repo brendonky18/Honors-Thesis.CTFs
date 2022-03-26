@@ -1,1 +1,0 @@
-chrootlist = [('*', ""), ('anonymous', "c:\\tmp")]

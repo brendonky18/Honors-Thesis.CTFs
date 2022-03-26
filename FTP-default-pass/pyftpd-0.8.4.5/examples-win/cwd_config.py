@@ -1,3 +1,0 @@
-cwdlist = [('*', 'c:\\'), ('anonymous', 'c:\\')]
-
-

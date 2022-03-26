@@ -19,3 +19,6 @@ ctfd_example
 ctfd_example.zip
 
 crypto-cracking/flag.txt
+
+# exclude pyftpd submodule
+going-backwards/pyftpd-0.8.4.5
