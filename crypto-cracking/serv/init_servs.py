@@ -6,10 +6,11 @@ from enum import Enum
 from debugger import Debugger
 from queue import Queue as TQueue
 from multiprocessing import Queue as PQueue
+import argparse
  
 # TODO: refactor with init_clis.py
-def main():
-    d = Debugger(False)
+def main(verbose: bool=False):
+    d = Debugger(verbose)
 
     # tracks if all the servers have started
     status = PQueue()
@@ -21,11 +22,13 @@ def main():
         gen_fermat
     ]
     procs = []
+    print(f"init_servs verbose {verbose}")
     for i in range(len(key_generators)):
         port = port_base + i
         p = multiprocessing.Process(
             target=ServerRSA, 
-            args=(key_generators[i].generate, port, status), 
+            args=(key_generators[i].generate, port, status, verbose), 
+            # kwargs={"verbose": verbose},
             name=f"proc_{key_generators[i].__name__}"
         )
         procs.append(p)
@@ -92,4 +95,7 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    p = argparse.ArgumentParser()
+    p.add_argument("-v", default=False, action="store_true")
+    args = p.parse_args()
+    main(args.v)

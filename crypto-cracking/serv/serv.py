@@ -34,6 +34,8 @@ class ServerRSA:
     FLAG_LEN_MSG = "FLAG_LEN"
     ENC_FLAG_MSG  = "ENC_FLAG"
 
+    verbose = False
+
     def __init__(self, key_generator: Callable, listen_port: int, status: Queue, verbose: bool=False):
         """Initializes and runs the server
 
@@ -44,7 +46,10 @@ class ServerRSA:
         listen_port : int
             the port to listen for incoming connections on
         """
-        _d = Debugger(verbose, current_process().name)
+        self.verbose = verbose
+        print(f"serv verbose {self.verbose}")
+
+        _d = Debugger(self.verbose, current_process().name)
         _d.printf(f"Initializing server")
 
         self._key_gen = key_generator
@@ -102,13 +107,15 @@ class ServerRSA:
             the client's ip address
         """
 
-        _d = Debugger(verbose, current_thread().name)
+        print(f"serv thread verbose {self.verbose}")
+
+        _d = Debugger(self.verbose, current_thread().name)
         _d.printf(f"Handle connection")
 
-        buf = 1024
+        buf = 2048
 
         while True:
-            _d.debug("a")
+            _d.debug("Getting next message")
             try:
                 msg = cli_sock.recv(buf)
                 _d.debug(f"Received {msg}")
