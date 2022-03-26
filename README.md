@@ -5,7 +5,7 @@ This *README* is meant as a guide for instructors who wish to use any of these m
 
 # CTF 1
 ## Solution
-The solution to this module can be found [here](/FTP-default-pass/SOLUTION.md).
+The solution to this module can be found [here](/FTP-default-pass/writeup.md).
 
 ## Setup Instructions
 You will need two separate machines: one to act as the server, and one which will the students will use as the client to access the server. Both machines must be in the same network, or otherwise be abbessible to each other over the internet.
