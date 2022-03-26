@@ -2,14 +2,9 @@ version: '3.2'
 volumes:
   pass-share:
 
-
 networks:
-  docker_net:
-    # name: docker_net
-    driver: bridge
-    ipam:
-      config:
-        - subnet:  10.0.0.0/24
+  nw0:
+    external: true
 
 services:
 # main services
@@ -28,12 +23,10 @@ services:
 
     # TODO: don't rebuild image every time
     build: &cli-build
-      context: cli/
-      dockerfile: cli.dockerfile
+      # context: cli/
+      dockerfile: https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/cli/cli.dockerfile
       args:
         - USER_NUM=0
-    ports:
-      - "2220:22"
     
     cap_add:
       - NET_RAW
@@ -41,8 +34,8 @@ services:
 
     # image: brendonky18/ctfs:crypto-cracking-cli
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.10
+      nw0:
+        ipv4_address: 172.20.30.100
   cli1: 
     <<: *cli
     hostname: cli1
@@ -51,12 +44,10 @@ services:
       <<: *cli-build
       args:
         - USER_NUM=1
-    ports:
-      - "2221:22"
     
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.11
+      nw0:
+        ipv4_address: 172.20.30.101
   cli2: 
     <<: *cli
     hostname: cli2
@@ -64,11 +55,9 @@ services:
       <<: *cli-build
       args:
         - USER_NUM=2
-    ports:
-      - "2222:22"
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.12
+      nw0:
+        ipv4_address: 172.20.30.102
 
 # testing services
   cli_test0: 
@@ -83,11 +72,9 @@ services:
       args:
         - USER_NUM=0
         - DEBUG=-v
-    ports:
-      - "2220:22"
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.10
+      nw0:
+        ipv4_address: 172.20.30.100
   cli_test1: 
     <<: *cli
     profiles:
@@ -100,11 +87,9 @@ services:
       args:
         - USER_NUM=1
         - DEBUG=-v
-    ports:
-      - "2221:22"
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.11
+      nw0:
+        ipv4_address: 172.20.30.101
   cli_test2: 
     <<: *cli
     profiles:
@@ -117,11 +102,9 @@ services:
       args:
         - USER_NUM=2
         - DEBUG=-v
-    ports:
-      - "2222:22"
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.12
+      nw0:
+        ipv4_address: 172.20.30.102
 
 # server
   serv: &serv
@@ -129,14 +112,19 @@ services:
       - main
     privileged: true
     hostname: serv0
-    volumes: *pass-share
+    volumes: 
+      - <<: *pass-share
+      - type: bind
+        source: .
+        target: /mnt/.flag
+
     build: &serv-build
-        context: serv/
-        dockerfile: serv.dockerfile
+        # context: serv/
+        dockerfile: https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/serv/serv.dockerfile
     # image: brendonky18/ctfs:crypto-cracking-serv
     networks:
-      docker_net:
-        ipv4_address: 10.0.0.20
+      nw0:
+        ipv4_address: 172.20.30.200
     
   serv-test:
     <<: *serv

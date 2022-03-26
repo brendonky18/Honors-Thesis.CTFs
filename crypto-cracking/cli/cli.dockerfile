@@ -1,4 +1,4 @@
-FROM crypto-cracking:base
+FROM brendonky18/ctfs:crypto-cracking-base
 
 ARG USER_NUM
 ENV user_num=${USER_NUM}
