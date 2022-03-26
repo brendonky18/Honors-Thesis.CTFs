@@ -12,6 +12,8 @@
 __pycache__/
 *.py[cod]
 
-# Example
+# CTFd Example
 ctfd_example
 ctfd_example.zip
+
+crypto-cracking/flag.txt
