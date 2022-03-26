@@ -11,3 +11,7 @@
 # Python
 __pycache__/
 *.py[cod]
+
+# Example
+ctfd_example
+ctfd_example.zip
