@@ -151,6 +151,6 @@ if __name__ == "__main__":
     args = p.parse_args()
     DEBUG_VERBOSE = args.v
     d = Debugger(DEBUG_VERBOSE)
-    d.info(args)
+    d.debug(args)
 
     main(str(args.host), args.hostnum)

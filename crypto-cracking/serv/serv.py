@@ -47,7 +47,6 @@ class ServerRSA:
             the port to listen for incoming connections on
         """
         self.verbose = verbose
-        print(f"serv verbose {self.verbose}")
 
         _d = Debugger(self.verbose, current_process().name)
         _d.printf(f"Initializing server")
@@ -106,8 +105,6 @@ class ServerRSA:
         addr : string
             the client's ip address
         """
-
-        print(f"serv thread verbose {self.verbose}")
 
         _d = Debugger(self.verbose, current_thread().name)
         _d.printf(f"Handle connection")

@@ -22,7 +22,7 @@ def main(verbose: bool=False):
         gen_fermat
     ]
     procs = []
-    print(f"init_servs verbose {verbose}")
+    d.debug(f"init_servs verbose {verbose}")
     for i in range(len(key_generators)):
         port = port_base + i
         p = multiprocessing.Process(

@@ -196,6 +196,4 @@ if __name__ == "__main__":
     p.add_argument("-v", default=False, action="store_true")
     args = p.parse_args()
     
-    print(f"FLAG {args.flag}")
-
     ClientRSA(str(args.host), args.port, flag=args.flag, verbose=args.v).run()

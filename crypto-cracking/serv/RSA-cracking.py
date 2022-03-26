@@ -38,6 +38,5 @@ def main(self):
 
 if __name__ == "__main__" :
     main()
-    # print(calc_keys(61, 53, 11))
 
 
