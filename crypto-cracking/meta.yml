@@ -38,9 +38,9 @@ The clients communicate with a custom protocol that is intended to mirror how en
 
 ## Additional Notes
 Here are additional notes to assist you in solving the CTF.
-- If you were born from January to April, please refer to the notes [here](https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/notes_0).
-- If you were born from May to August, please refer to the notes [here](https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/notes_1).
-- If you were born from September to December, please refer to the notes [here](https://raw.githubusercontent.com/brendonky18/Honors-Thesis.CTFs/crypto-cracking/crypto-cracking/notes_2).
+- If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
+- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
+- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
 
 value: 100
 category: Cryptography, Networking
