@@ -28,7 +28,7 @@ class ClientRSA:
     FLAG_LEN_MSG = "FLAG_LEN"
     ENC_FLAG_MSG  = "ENC_FLAG"
 
-    def __init__(self, host: str, port: int, conn_attempts: int = 3, conn_wait: float = 5, flag: int=1, verbose: bool=False):
+    def __init__(self, host: str, port: int, conn_attempts: int = 3, conn_wait: float = 5, flag: int=1, verbose: bool=False, small_key=False):
         """Initializes and runs the client
 
         Parameters
@@ -121,7 +121,10 @@ class ClientRSA:
             FULL_LEN = 0x20
             SALT_LEN = FULL_LEN - FLAG_LEN
             # calculate how many bytes can fit
-            a_max_bytes = floor(log(mod, 256))
+            if small_key:
+                a_max_bytes = floor(log(mod**(1/e), 256))
+            else:
+                a_max_bytes = floor(log(mod, 256))
             _d.debug(f"max bytes {a_max_bytes}")
             key_len = 1
             if a_max_bytes < 1:

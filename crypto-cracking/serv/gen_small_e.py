@@ -1,7 +1,8 @@
 import sympy
 import serv
 import argparse
-
+# The largest possible message we will send
+MAX_VAL = 136143999223230197147385125158541490813 # ==> the keys must be at least 191 bits long
 def hamming_weight(num: int) -> int:
     weight = 0
 
@@ -24,15 +25,17 @@ def generate():
     """
     e = 3
 
+    # e = 3 ==> n < 341 bits
+    # otherwise it will be too large to do float arithmetic
     invalid = True
     while invalid:
-        p = sympy.randprime(2**1, 2**1024)
+        p = sympy.randprime(2**127, 2**128)
         invalid = (p-1) % e == 0
     
     invalid = True
     while invalid:
-        q = sympy.randprime(2**1023, 2**2014)
-        invalid = p == q or (q-1) % e == 0 or hamming_weight((p^q) >> 512 < 256)
+        q = sympy.randprime(2**255, 2**256)
+        invalid = p == q or (q-1) % e == 0 #or hamming_weight((p^q) >> 512 < 256)
     
     return p, q, e
 

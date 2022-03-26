@@ -54,7 +54,13 @@ def main(host: str, host_num: int=-1):
     p = multiprocessing.Process(
         target=ClientRSA, 
         args=(host, port), 
-        kwargs={"flag": flag, "conn_attempts": CONN_ATTEMPTS, "conn_wait": CONN_WAIT, "verbose": DEBUG_VERBOSE}, 
+        kwargs={
+            "flag": flag, 
+            "conn_attempts": CONN_ATTEMPTS, 
+            "conn_wait": CONN_WAIT, 
+            "verbose": DEBUG_VERBOSE,
+            "small_key": host_num == 1
+        }, 
         name=f"cli-{port}"
     )
     d.info("Spawning client process")
