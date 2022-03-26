@@ -40,24 +40,15 @@ def gen() -> str:
     else:
         lo_key = key2
         hi_key = key1
-    print("a")
-    print(bin_char_set)
-    print(char_set)
     # ensures that our chars are within the specified char set
-    print(f"MIN {MIN_VAL}")
-    print(f"MAX {MAX_VAL}")
     while MIN_VAL < lo_key and hi_key < MAX_VAL:
-        print("b")
         if lo_key in bin_char_set and hi_key in bin_char_set:
             key_ba = bytearray(key_base + lo_key.to_bytes(1, "big") + hi_key.to_bytes(1, "big"))
             shuffle(key_ba)
-            print(key_ba)
             return key_ba.decode("ascii")
         else:
             lo_key -= 1
             hi_key += 1
-
-    print("c")
     # bad set of starting chars, try again
     return gen()
 
@@ -129,7 +120,6 @@ if __name__ == "__main__":
                 print(k)
                 validate(k)
                 break
-
 
         print("Incorrect chars: ")
         print(len(list(filter(lambda val: val not in char_set, keys))))
