@@ -1,7 +1,6 @@
 import sympy
 import serv
 import argparse
-from random import randrange
 
 def generate():
     """Generate two small prime numbers, 
