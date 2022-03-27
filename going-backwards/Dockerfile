@@ -2,7 +2,7 @@ FROM shimizukawa/python-all:ubuntu-12.04
 ARG FLAG=flag{dummyflag}
 ENV flag=${FLAG}
 
-COPY /pyftpd-0.8.4.5_mirror /srv/ftp
+COPY pyftpd-0.8.4.5_mirror /srv/ftp
 
 COPY FLAG.txt /
 
