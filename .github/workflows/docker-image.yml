@@ -18,6 +18,9 @@ jobs:
       with:
         username: ${{ secrets.DOCKER_HUB_USERNAME }}
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      
+    - name: Fix git protocol
+      run: git config --global url."https://".insteadOf git://
     
     - name: Build image
       run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards --build-arg FLAG=${{ secrets.GOING_BACKWARDS_FLAG }} ${{github.repositoryUrl}}#${{github.ref_name}}:going-backwards
