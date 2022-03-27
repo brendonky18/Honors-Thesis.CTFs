@@ -4,7 +4,7 @@ ENV flag=${FLAG}
 
 COPY /pyftpd-0.8.4.5_mirror /srv/ftp
 
-COPY FLAG /
+COPY FLAG.txt /
 
 RUN echo $flag >> FLAG.txt
 
