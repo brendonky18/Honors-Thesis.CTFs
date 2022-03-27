@@ -1,0 +1,137 @@
+version: '3.2'  
+volumes:
+  pass-share:
+
+networks:
+  nw0:
+    external: true
+
+services:
+# main services
+  cli0: &cli
+    profiles:
+      - main
+    depends_on:
+      - serv
+    hostname: cli0
+    volumes: &pass-share
+      - type: volume
+        source: pass-share
+        target: /mnt/.share
+        volume:
+          nocopy: true
+
+    # TODO: don't rebuild image every time
+    build: &cli-build
+      context: https://github.com/brendonky18/Honors-Thesis.CTFs.git#${BRANCH}:crypto-cracking/cli
+      dockerfile: cli.dockerfile
+      args:
+        - USER_NUM=0
+    
+    cap_add:
+      - NET_RAW
+      - NET_ADMIN
+
+    # image: brendonky18/ctfs:crypto-cracking-cli
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.100
+  cli1: 
+    <<: *cli
+    hostname: cli1
+    
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=1
+    
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.101
+  cli2: 
+    <<: *cli
+    hostname: cli2
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=2
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.102
+
+# testing services
+  cli_test0: 
+    <<: *cli
+    profiles:
+      - test
+    depends_on:
+      - serv-test
+    hostname: cli0
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=0
+        - DEBUG=-v
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.100
+  cli_test1: 
+    <<: *cli
+    profiles:
+      - test
+    depends_on:
+      - serv-test
+    hostname: cli1
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=1
+        - DEBUG=-v
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.101
+  cli_test2: 
+    <<: *cli
+    profiles:
+      - test
+    depends_on:
+      - serv-test
+    hostname: cli2
+    build: 
+      <<: *cli-build
+      args:
+        - USER_NUM=2
+        - DEBUG=-v
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.102
+
+# server
+  serv: &serv
+    profiles:
+      - main
+    privileged: true
+    hostname: serv0
+    volumes: 
+      - <<: *pass-share
+      - type: bind
+        source: .
+        target: /mnt/.flag
+
+    build: &serv-build
+        context: https://github.com/brendonky18/Honors-Thesis.CTFs.git#${BRANCH}:crypto-cracking/serv
+        dockerfile: serv.dockerfile
+    # image: brendonky18/ctfs:crypto-cracking-serv
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.200
+    
+  serv-test:
+    <<: *serv
+    profiles:
+      - test
+    build:
+      <<: *serv-build
+      args: 
+        - DEBUG=-v
+    
