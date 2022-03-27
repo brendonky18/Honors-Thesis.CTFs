@@ -1,0 +1,26 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: [ main, going-backwards ]
+  pull_request:
+    branches: [ main, going-backwards ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - name: Docker Hub Login
+      uses: docker/login-action@v1
+      with:
+        username: ${{ secrets.DOCKER_HUB_USERNAME }}
+        password: ${{ secrets.DOCKER_HUB_TOKEN }}
+      
+    - name: Fix git protocol
+      run: git config --global url."https://".insteadOf git://
+    
+    - name: Build image
+      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards --build-arg FLAG=${{ secrets.GOING_BACKWARDS_FLAG }} ${{github.repositoryUrl}}#${{github.ref_name}}:going-backwards
+
+    - name: Push image
+      run: docker push ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards
