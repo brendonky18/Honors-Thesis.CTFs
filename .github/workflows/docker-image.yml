@@ -20,7 +20,7 @@ jobs:
         password: ${{ secrets.DOCKER_HUB_TOKEN }}
     
     - name: Build image
-      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards --build-arg FLAG=${{ secrets.GOING_BACKWARDS_FLAG }} ${{github.repositoryUrl}}#${{github.ref_name}}:going-backwards .
+      run: docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards --build-arg FLAG=${{ secrets.GOING_BACKWARDS_FLAG }} ${{github.repositoryUrl}}#${{github.ref_name}}:going-backwards
       # example: https://github.com/brendonky18/Honors-Thesis.CTFs.git # ${BRANCH} : crypto-cracking/cli
 
     - name: Push image
