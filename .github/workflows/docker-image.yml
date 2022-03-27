@@ -13,7 +13,7 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
       with:
-        submodules: true
+        submodules: recursive
 
     - name: Docker Hub Login
       uses: docker/login-action@v1
@@ -27,7 +27,7 @@ jobs:
     - name: Build and push
       uses: docker/build-push-action@v2
       with:
-        context: "{{defaultContext}}:going-backwards"
+        context: ./going-backwards
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards
         build-args: FLAG=${{ secrets.GOING_BACKWARDS_FLAG }}
