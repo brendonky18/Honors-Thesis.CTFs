@@ -26,7 +26,6 @@ jobs:
       uses: docker/build-push-action@v2
       with:
         context: "{{defaultContext}}:going-backwards"
-        file: ./going-backwards/Dockerfile
         push: true
         tags: ${{ secrets.DOCKER_HUB_USERNAME }}/ctfs:going-backwards
         build-args: FLAG=${{ secrets.GOING_BACKWARDS_FLAG }}
