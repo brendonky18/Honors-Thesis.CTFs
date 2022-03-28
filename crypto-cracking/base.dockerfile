@@ -5,7 +5,7 @@ ENV PYTHONPATH="$PYTHONPATH:/usr/bin/python3"
 
 # install packages
 RUN apt update 
-RUN apt install git openssh-server tcpdump wireshark python3 python3-pip
+RUN apt install git openssh-server tcpdump wireshark python3 python3-pip -y
 
 RUN pip install sympy parse git+https://github.com/brendonky18/PyDebugger
 
