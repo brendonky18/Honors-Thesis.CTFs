@@ -144,7 +144,7 @@ def main(host: str, host_num: int=-1):
 
     while running:
         running &= p.is_alive()
-        
+        d.debug(running)
         sleep(0.01)
     d.debug("All procs ended")
     cleanup()

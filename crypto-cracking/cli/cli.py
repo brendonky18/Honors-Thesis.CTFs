@@ -104,8 +104,11 @@ class ClientRSA:
                     _d.info(f"mod: {mod}")
                     pub_exponent = data[self.EXP]
                     _d.info(f"e: {pub_exponent}")
+                    _d.debug("what")
                 else:
+                    _d.err(f"Unknown message type {msg}")
                     raise RuntimeError(f"Unknown message {msg}")
+                _d.debug("No errors yet")
             except OSError as e:
                 _d.err(e)
                 cleanup(-2)
@@ -116,14 +119,18 @@ class ClientRSA:
                 _d.err(e)
                 cleanup(-4)
 
+            _d.debug("Message recieved")
+
             # Length of the flag in bytes
             FLAG_LEN = 0x10
             FULL_LEN = 0x20
             SALT_LEN = FULL_LEN - FLAG_LEN
             # calculate how many bytes can fit
             if small_key:
+                _d.debug("Small key")
                 a_max_bytes = floor(log(mod**(1/e), 256))
             else:
+                _d.debug("Normal key")
                 a_max_bytes = floor(log(mod, 256))
             _d.debug(f"max bytes {a_max_bytes}")
             key_len = 1
