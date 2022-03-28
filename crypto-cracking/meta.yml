@@ -36,11 +36,11 @@ The clients communicate with a custom protocol that is intended to mirror how en
        * Meaning that if the key is *n* bits long, it will xor the message in blocks of *n* bits at a time, until it has encrypted the entire message.
    4. Finally, the encrypted symmetric key and encrypted message are then both sent to the server.
 
-## Additional Notes
+# Additional Notes
 Here are additional notes to assist you in solving the CTF.
 - If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
-- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
-- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
+- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_1.md).
+- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_1.md).
 
 value: 100
 category: Cryptography, Networking
