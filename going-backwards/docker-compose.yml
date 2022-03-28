@@ -2,6 +2,15 @@ version: "3.9"
 
 services:
   ftp-serv:
+    container_name: going-backwards
     image: "brendonky18/ctfs:going-backwards"
     ports:
       - "2121:2121"
+    networks:
+      nw0:
+        ipv4_address: 172.20.30.128 # This can be any address in subnet
+
+# leave this part as it is
+networks:
+  nw0:
+    external: true

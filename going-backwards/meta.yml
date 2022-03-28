@@ -1,0 +1,19 @@
+name: Going Backwards
+author: [Brendon Ky](https://github.com/brendonky18)
+
+description: |
+  There is an FTP server exposed on port 2121. Inside this server there is a file titled `FLAG.txt` which contains the flag to be submitted. It should look something like `flag{ExampleFlag}`. The ftp server running is pyftp 0.8.4.5, which was actually available on Debian Release: 5.0.4 from 2009-20010. A mirror of the source code is available at this [github repository](https://github.com/brendonky18/pyftpd-0.8.4.5_mirror).
+
+  If you are not familiar with FTP, it stands for *File Transferer Protocol*, and was designed to allow users to remotely access files stored on a server. 
+
+  Your task is to reverse engineer this program in order to discover a vulnerability which will allow you to capture the flag.
+
+  Reverse Engineering is the process of dismantling and examining a programs source code — sometimes even the assembly or raw binaries, which won't be necessary for this module — in order to understand what it does, how it works, and for our purposes, how it can be exploited.
+
+  Good luck!
+
+value: 100
+category: Reverse Engineering
+
+# administrative
+container_name: going-backwards
