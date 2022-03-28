@@ -29,7 +29,7 @@ def generate():
     # otherwise it will be too large to do float arithmetic
     invalid = True
     while invalid:
-        p = sympy.randprime(2**31, 2*32)
+        p = sympy.randprime(2**31, 2**32)
         invalid = (p-1) % e == 0
     
     invalid = True
