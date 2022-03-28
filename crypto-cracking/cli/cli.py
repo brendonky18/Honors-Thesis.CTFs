@@ -128,7 +128,7 @@ class ClientRSA:
             # calculate how many bytes can fit
             if small_key:
                 _d.debug("Small key")
-                a_max_bytes = floor(log(mod**(1/e), 256))
+                a_max_bytes = floor(log(mod**(1/pub_exponent), 256))
             else:
                 _d.debug("Normal key")
                 a_max_bytes = floor(log(mod, 256))
