@@ -29,12 +29,12 @@ def generate():
     # otherwise it will be too large to do float arithmetic
     invalid = True
     while invalid:
-        p = sympy.randprime(2**127, 2**128)
+        p = sympy.randprime(2**31, 2*32)
         invalid = (p-1) % e == 0
     
     invalid = True
     while invalid:
-        q = sympy.randprime(2**255, 2**256)
+        q = sympy.randprime(2**31, 2**32)
         invalid = p == q or (q-1) % e == 0 #or hamming_weight((p^q) >> 512 < 256)
     
     return p, q, e
