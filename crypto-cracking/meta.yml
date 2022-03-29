@@ -41,9 +41,9 @@ TIP
 - When converting from floats to ints, make sure to use the `round()` function and not the `int()` function, as the latter will truncate instead of rounding. 
 
 Here are additional notes to assist you in solving the CTF.
-- If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_0.md).
-- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_1.md).
-- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/crypto-cracking/notes_1.md).
+- If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/crypto-cracking/notes_0.md).
+- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/crypto-cracking/notes_1.md).
+- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/crypto-cracking/notes_1.md).
 
 value: 100
 category: Cryptography, Networking
