@@ -16,9 +16,9 @@ Reverse Engineering is the process of dismantling and examining a programs sourc
 
 # Additional Notes
 Here are additional notes to assist you in solving the CTF.
-- If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/main/notes_0.md).
-- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/main/notes_1.md).
-- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/ctfd-integration/main/notes_2.md).
+- If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/going-backwards/notes_0.md).
+- If you were born from May to August, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/going-backwards/notes_1.md).
+- If you were born from September to December, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/going-backwards/notes_2.md).
 
 value: 100
 category: Reverse Engineering
