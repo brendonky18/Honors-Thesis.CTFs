@@ -10,4 +10,7 @@ The vulnerability in the public key used by user 1, is that the public exponent 
 ### Cracking User 2
 The vulnerability if the public key used by user 2, is that the two prime numbers are incredibly close to each other. 
 
+## *Still Stuck*
+If you have any other questions, you can reach out to me at bky@umass.edu. 
+
 ***As a final reminder, please do not look at the other instructions.***
