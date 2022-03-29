@@ -57,3 +57,10 @@
             ```
             wireshark -ki <(nc 192.168.1.1 10000)
             ```
+# CTFd Deployment
+- [ ] Lock down user permissions
+  - Users are able to run commands over ssh, could lead to privilege escalation
+  - Make the `remote_pcap` pipe read-only
+  - Remote root user pass (only needed for testing because sudo was unavailable)
+- [ ] Implement static flag for user 3
+  - [ ] format `SDaT_Flag{...}`
