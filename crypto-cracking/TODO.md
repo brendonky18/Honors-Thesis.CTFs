@@ -60,6 +60,7 @@
 # CTFd Deployment
 - [ ] Lock down user permissions
   - Users are able to run commands over ssh, could lead to privilege escalation
+    - Set `force_command` in `sshd_config`
   - Make the `remote_pcap` pipe read-only
   - Remote root user pass (only needed for testing because sudo was unavailable)
 - [ ] Implement static flag for user 3
