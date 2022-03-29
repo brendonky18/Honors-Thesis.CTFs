@@ -9,7 +9,7 @@ The solution to this module can be found [here](going-backwards/writeup.md).
 
 ## Setup Instructions
 ### Requirements
-To run this, you must have `docker`, and `docker-compose` installed. You must also have a network called `nw0` with the subnet 172.20.30.0/24. 
+To run this, you must have `docker`, and `docker-compose` installed. `docker-compose` must be at least version 1.28, as of this writing, 1.25 is the version installed through `apt-get docker-compose`, you can install a more recent version by using `pip install docker-compose` instead, please note that you must first uninstall any other versions you have before installing the newer version. You must also have a network called `nw0` with the subnet 172.20.30.0/24. 
 You can create the network with the following command:
 
     docker network create nw0 --subnet 172.20.30.0/24
@@ -35,5 +35,5 @@ Everything else will be set up automatically.
 The solution to this module can be found [here](crypt-cracking/writeup.md).
 
 ## Setup Instruction
-This has the same requirements and setup process. Download the [`docker-compose.yml`](going-backwards/docker-compose.yml) file. Create a network called `nw0`. Use the `docker-compose` command to start and stop the server.
-
+This has almost the same requirements and setup process. Download the [`docker-compose.yml`](going-backwards/docker-compose.yml) file. Create a network called `nw0`. Use the `docker-compose` command to start and stop the server.
+Additionally, it requires a number of environment variables to be set, to do this, you must also have the [`.env`](going-backwards/.env) file downloaded in the same directory.
