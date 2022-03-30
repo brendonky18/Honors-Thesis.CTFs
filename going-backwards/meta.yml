@@ -6,7 +6,7 @@ You are going to be assigned a specific set of instructions, please do not refer
 Do not worry if you get stuck at any point, or are unable to complete the entire challenge, simply try to get as fas as possible based on the instructions and information provided. This is not meant to be an assessment of your knowledge, and you will not be impacted in any way regardless of how much you are able to complete. 
 
 # Instructions
-There is an FTP server exposed on port 2121. Inside this server there is a file titled `FLAG.txt` which contains the flag to be submitted. It should look something like `flag{ExampleFlag}`. The ftp server running is pyftp 0.8.4.5, which was actually available on Debian Release 5.0.4 from 2009-20010. A mirror of the source code is available at this [github repository](https://github.com/brendonky18/pyftpd-0.8.4.5_mirror).
+There is an FTP server exposed on port 2121. Inside this server there is a file titled `FLAG.txt` which contains the flag to be submitted. It should look something like `CTF_SDaT{ExampleFlag}`. The ftp server running is pyftp 0.8.4.5, which was actually available on Debian Release 5.0.4 from 2009-20010. A mirror of the source code is available at this [github repository](https://github.com/brendonky18/pyftpd-0.8.4.5_mirror).
 
 If you are not familiar with FTP, it stands for *File Transferer Protocol*, and was designed to allow users to remotely access files stored on a server. 
 

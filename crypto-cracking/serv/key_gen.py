@@ -19,6 +19,8 @@ MAGIC = round(AVG_VAL * KEY_LEN)
 
 FINAL_KEY = 3 # the key number corresponding to the last key in the challenge
 START_PASS = "start_here" # the password for the first user
+# FIXME: check() doesn't check for this
+END_PASS = "Cr4cK3d"
 
 def _calc_offset(keynum: int) -> int:
     """
@@ -65,6 +67,9 @@ def gen(keynum:int=FINAL_KEY) -> str:
 
     if keynum == 0:
         return START_PASS
+    elif keynum == FINAL_KEY:
+        return END_PASS
+
 
     # gets 8 random ascii chars, at least 1 of which is a digit
     key_base = bytes("".join(SRand().choice(char_set) for i in range(KEY_LEN - 2)), "ascii")
@@ -133,7 +138,7 @@ def check(key:Union[str, bytes, bytearray, int], keynum:int=FINAL_KEY) -> bool:
         raise ValueError(f"arg 'key' is invalid type '{type(key)}'")
 
     # Parse string to isolate the raw flag
-    parsed = parse("flag{{{}}}", key)
+    parsed = parse("CTF_SDaT{{{}}}", key)
     if parsed is not None:
         key = parsed[0]
 

@@ -37,7 +37,7 @@ def main(host: str, host_num: int=-1):
             d.err(f"File {file_path} not created. Unable to open after {num_attempts} attempts")
             exit(1)
           
-        flag_text = f"flag{{{user_info.split(':')[1]}}}"
+        flag_text = f"CTF_SDaT{{{user_info.split(':')[1]}}}"
         d.debug(f"flag: {flag_text}")
         flag = int.from_bytes(flag_text.encode("ascii"), "big")
 

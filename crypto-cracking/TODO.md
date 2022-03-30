@@ -63,5 +63,5 @@
     - Set `force_command` in `sshd_config`
   - Make the `remote_pcap` pipe read-only
   - Remote root user pass (only needed for testing because sudo was unavailable)
-- [ ] Implement static flag for user 3
-  - [ ] format `SDaT_Flag{...}`
+- [x] Implement static flag for user 3
+  - [x] format `CTF_SDaT{...}`
