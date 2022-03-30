@@ -18,7 +18,7 @@ RUN mkfifo /run/remote_pcap
 
 # Manage User
 RUN useradd -m -u 100${USER_NUM} -s /bin/bash user${USER_NUM}
-RUN echo 'root:rootpass' | chpasswd
+# RUN echo 'root:rootpass' | chpasswd
 RUN usermod -a -G wireshark user${USER_NUM}
 
 USER user${USER_NUM}
