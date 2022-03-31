@@ -1,6 +1,6 @@
 FROM brendonky18/ctfs:crypto-cracking-base
 
-ARG USER_NUM
+ARG USER_NUM=0
 ENV user_num=${USER_NUM}
 ARG DEBUG
 ENV debug=${DEBUG}
@@ -18,7 +18,7 @@ RUN mkfifo /run/remote_pcap
 
 # Manage User
 RUN useradd -m -u 100${USER_NUM} -s /bin/bash user${USER_NUM}
-# RUN echo 'root:rootpass' | chpasswd
+RUN if [ ! -z "$debug" ] ; then echo 'root:rootpass' | chpasswd ; fi
 RUN usermod -a -G wireshark user${USER_NUM}
 
 USER user${USER_NUM}

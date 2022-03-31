@@ -69,12 +69,15 @@ services:
     hostname: cli0
     build: 
       <<: *cli-build
+      context: cli/
       args:
         - USER_NUM=0
         - DEBUG=-v
     networks:
       nw0:
         ipv4_address: 172.20.30.100
+    ports:
+      - "2220:22"
   cli_test1: 
     <<: *cli
     profiles:
@@ -84,6 +87,7 @@ services:
     hostname: cli1
     build: 
       <<: *cli-build
+      context: cli/
       args:
         - USER_NUM=1
         - DEBUG=-v
@@ -99,6 +103,7 @@ services:
     hostname: cli2
     build: 
       <<: *cli-build
+      context: cli/
       args:
         - USER_NUM=2
         - DEBUG=-v
@@ -132,6 +137,7 @@ services:
       - test
     build:
       <<: *serv-build
+      context: serv
       args: 
         - DEBUG=-v
     
