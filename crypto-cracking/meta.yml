@@ -15,11 +15,16 @@ Your goal is to explore those methods in order to gain a better working understa
 
 On this network there are 4 computers in total. 
 There is 1 server, and 3 users (numbered 0, 1, and 2) which are communicating to this server using an encrypted protocol. 
-Each client is running TCP dump, and sending it to port 22. You can connect to this port with ssh, and send the output to wireshark, the shell script `remote_pcap.sh` has been provided to do this for you automatically. 
+Each client is running TCP dump, and sending it to port 22. You can connect to this port with ssh, and send the output to wireshark.
+The shell script `remote_pcap.sh` has been provided to do this for you automatically. 
 It accepts two arguments, the user number that you are connecting to, and your student username which you use to `ssh` into the swarm network with.
+If you restart the script and get an error message saying "Data written to the pipe is neither in a supported in a supported pcap format nor in pcapng format."
+close wireshark, exit the ssh session by hitting Ctrl+C, and wait about 20-30 seconds before running the script again.
+This happens because it takes a couple of seconds to restart the packet capture, and wireshark is trying to connect before it's ready.
 
-So for example, if I wanted to connect to user `0`, and my user name is `bky`, I run `./remote_pcap.sh 0 bky`. 
-Of course, you must have wireshark installed on your local computer, which you can get by running `sudo apt-get install wireshark` if you are using Kali Linux.
+So for example, if I wanted to connect to user `0`, and my student account name is `bky`, I run `./remote_pcap.sh 0 bky`. 
+Of course, you must have wireshark installed on your local computer, which you can get by running `sudo apt-get install wireshark` on Ubuntu or other Debian-based distros.
+If you are using Kali Linux, it should already be installed.
 
 You should start with user 0, the password for user 0 is `start_here`. Each user is transmitting the password for the subsequent user over the encrypted protocol, i.e. user 0 is sending user 1's password, and user 1 is sending user 2's. User 2 is transmitting the final flag which you will submit. 
 
@@ -34,11 +39,13 @@ The clients communicate with a custom protocol that is intended to mirror how en
    3. The number is also used to encrypt the message, by xoring the message and key together.
        * If the symmetric key is not long enough to encrypt the entire message, then it will be applied as a block cipher.
        * Meaning that if the key is *n* bits long, it will xor the message in blocks of *n* bits at a time, until it has encrypted the entire message.
+       * For example, if the symmetric key was 0b11110000, and our message was 8 bytes long, message would be xored by 0b11110000 11110000 11110000 11110000 11110000 11110000 11110000 11110000
    4. Finally, the encrypted symmetric key and encrypted message are then both sent to the server.
+4. All bytes are in network byte order, meaning that everything is in big endian.
 
 # Additional Notes
 TIP
-- When converting from floats to ints, make sure to use the `round()` function and not the `int()` function, as the latter will truncate instead of rounding. 
+- If you are using python, when converting from floats to ints, make sure to use the `round()` function and not the `int()` function, as the latter will truncate instead of rounding properly. 
 
 Here are additional notes to assist you in solving the CTF.
 - If you were born from January to April, please refer to the notes [here](https://github.com/brendonky18/Honors-Thesis.CTFs/blob/main/crypto-cracking/notes_0.md).
