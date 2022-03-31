@@ -21,16 +21,14 @@ RUN useradd -m -u 100${USER_NUM} -s /bin/bash user${USER_NUM}
 RUN if [ ! -z "$debug" ] ; then echo 'root:rootpass' | chpasswd ; fi
 RUN usermod -a -G wireshark user${USER_NUM}
 
-USER user${USER_NUM}
+# Lock down ssh user permission
+RUN echo "PermitTTY no\nForceCommand cat /run/remote_pcap" >> /etc/ssh/sshd_config
 
 COPY . /usr/share/pyshared/.
 WORKDIR /usr/share/pyshared/
 ENTRYPOINT \
-# echo $debug && echo ${DEBUG}
-echo rootpass | su root -c "python3 /mnt/.share/key_gen.py -g -u $user_num > /mnt/.share/pass$user_num \
+python3 /mnt/.share/key_gen.py -g -u $user_num > /mnt/.share/pass$user_num \
 && cat /mnt/.share/pass$user_num | chpasswd \
 & service ssh start \
-& python3 init_clis.py --host 172.20.30.200 --hostnum $user_num $debug\
-& tcpdump -s 0 -U -n -w - -i eth0 not port 22 > /tmp/remote_pcap" 2> \
-# redirect "Password:" prompt
-/dev/null
+& while true; do tcpdump -s 0 -U -n -w - -i eth0 not port 22 > /run/remote_pcap; done  \
+& python3 init_clis.py --host 172.20.30.200 --hostnum $user_num $debug
