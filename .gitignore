@@ -21,3 +21,8 @@ crypto-cracking/flag.txt
 
 # exclude pyftpd submodule
 going-backwards/pyftpd-0.8.4.5_mirror
+
+# word docs
+*.tmp
+~$*.doc*
+Backup of *.doc*
