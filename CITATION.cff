@@ -1,0 +1,14 @@
+# This CITATION.cff file was generated with cffinit.
+# Visit https://bit.ly/cffinit to generate yours today!
+
+cff-version: 1.2.0
+title: Honors Thesis CTFs
+message: >-
+  If you use this software, please cite it using the
+  metadata from this file.
+type: software
+authors:
+  - given-names: Brendon
+    family-names: Ky
+    email: brendonky18@gmail.com
+repository-code: 'https://github.com/brendonky18/Honors-Thesis.CTFs'
